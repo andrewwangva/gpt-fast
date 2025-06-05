@@ -60,6 +60,9 @@ def convert_hf_checkpoint(
         "model.layers.{}.self_attn.q_proj.weight": "layers.{}.attention.wq.weight",
         "model.layers.{}.self_attn.k_proj.weight": "layers.{}.attention.wk.weight",
         "model.layers.{}.self_attn.v_proj.weight": "layers.{}.attention.wv.weight",
+        "model.layers.{}.self_attn.q_proj.bias": "layers.{}.attention.wq.bias",
+        "model.layers.{}.self_attn.k_proj.bias": "layers.{}.attention.wk.bias",
+        "model.layers.{}.self_attn.v_proj.bias": "layers.{}.attention.wv.bias",
         "model.layers.{}.self_attn.o_proj.weight": "layers.{}.attention.wo.weight",
         'model.layers.{}.self_attn.rotary_emb.inv_freq': None,
         'model.layers.{}.mlp.gate_proj.weight': 'layers.{}.feed_forward.w1.weight',
@@ -88,6 +91,11 @@ def convert_hf_checkpoint(
        else:
            state_dict = torch.load(str(file), map_location="cpu", mmap=True, weights_only=True)
            merged_result.update(state_dict)
+    for key, tensor in merged_result.items():
+        if isinstance(tensor, torch.Tensor):
+            print(f"{key}: {tuple(tensor.shape)}")
+        else:
+            print(f"{key}: (non-tensor, type={type(tensor)})")
     final_result = {}
     for key, value in merged_result.items():
         if "layers" in key:
@@ -103,12 +111,23 @@ def convert_hf_checkpoint(
         final_result[new_key] = value
 
     for key in tuple(final_result.keys()):
-        if "wq" in key:
+        if "wq" in key and "weight" in key:
             q = final_result[key]
             k = final_result[key.replace("wq", "wk")]
             v = final_result[key.replace("wq", "wv")]
+            print(key, q.shape, k.shape, v.shape)
             q = permute(q, config.n_head)
             k = permute(k, config.n_local_heads)
+            print("reshaped", q.shape, k.shape, v.shape)
+            final_result[key.replace("wq", "wqkv")] = torch.cat([q, k, v])
+            del final_result[key]
+            del final_result[key.replace("wq", "wk")]
+            del final_result[key.replace("wq", "wv")]
+        if "wq" in key and "bias" in key:
+            q = final_result[key]
+            k = final_result[key.replace("wq", "wk")]
+            v = final_result[key.replace("wq", "wv")]
+            print(key, q.shape, k.shape, v.shape)
             final_result[key.replace("wq", "wqkv")] = torch.cat([q, k, v])
             del final_result[key]
             del final_result[key.replace("wq", "wk")]

@@ -14,6 +14,9 @@ import torch._dynamo.config
 import torch._inductor.config
 from torch.nn.attention.flex_attention import BlockMask, create_block_mask
 
+from torch.nn import functional as F
+
+
 def device_sync(device):
     if "cuda" in device:
         torch.cuda.synchronize(device)
@@ -68,7 +71,7 @@ def causal_mask(b, h, q, kv):
 def prefill(model: Transformer, x: torch.Tensor, input_pos: torch.Tensor, **sampling_kwargs) -> torch.Tensor:
     # input_pos: [B, S]
     mask = create_block_mask(causal_mask, 1, 1, input_pos.shape[0], model.max_seq_length, device=x.device)
-    logits = model(mask, x, input_pos)
+    logits = model(x, input_pos)
     return sample(logits, **sampling_kwargs)[0]
 
 def decode_one_token(model: Transformer, x: torch.Tensor, input_pos: torch.Tensor, block_mask: BlockMask, **sampling_kwargs) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -78,7 +81,7 @@ def decode_one_token(model: Transformer, x: torch.Tensor, input_pos: torch.Tenso
     mask = block_mask[:, :, block_index]
     mask.mask_mod = block_mask.mask_mod
     mask.seq_lengths = (1, model.max_seq_length)
-    logits = model(mask, x, input_pos)
+    logits = model(x, input_pos)
     return sample(logits, **sampling_kwargs)
 
 def decode_n_tokens(model: Transformer, cur_token: torch.Tensor, input_pos: torch.Tensor, num_new_tokens: int, callback=lambda _: _, **sampling_kwargs):
@@ -179,6 +182,7 @@ def generate(
     device, dtype = prompt.device, prompt.dtype
     max_seq_length = max_seq_length + speculate_k + 1 if is_speculative else max_seq_length
     with torch.device(device):
+        print("setup", batch_size, max_seq_length)
         model.setup_caches(max_batch_size=batch_size, max_seq_length=max_seq_length)
         if is_speculative and draft_model is not model:
             draft_model.setup_caches(max_batch_size=batch_size, max_seq_length=max_seq_length)
@@ -190,7 +194,8 @@ def generate(
     empty[:, :T] = prompt
     seq = empty
     input_pos = torch.arange(0, T, device=device)
-
+    print(f"prefill x shape: {prompt.view(batch_size, -1).view(batch_size, -1).shape}, input_pos: {input_pos.shape}")
+    print("devices", prompt.device, input_pos.device)
     next_token = prefill(model, prompt.view(batch_size, -1), input_pos, **sampling_kwargs).clone()
     if is_speculative:
         prefill(draft_model, prompt.view(batch_size, -1), input_pos, **sampling_kwargs)
@@ -216,6 +221,7 @@ def generate(
             input_pos = input_pos + num_added
             next_token = next_tokens[-1]
     else:
+        print(f"x shape: {next_token.view(batch_size, -1).shape}, input_pos: {input_pos.shape}")
         generated_tokens, _ = decode_n_tokens(model, next_token.view(batch_size, -1), input_pos, max_new_tokens - 1, callback=callback, **sampling_kwargs)
         seq[:, T + 1:] = torch.cat(generated_tokens, dim=-1)
 
@@ -303,7 +309,7 @@ def main(
     """
     assert checkpoint_path.is_file(), checkpoint_path
 
-    tokenizer_path = checkpoint_path.parent / "tokenizer.model"
+    tokenizer_path = checkpoint_path.parent / "tokenizer.json"
     assert tokenizer_path.is_file(), str(tokenizer_path)
 
     global print

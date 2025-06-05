@@ -5,7 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 import math
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 import torch
 import torch.nn as nn
@@ -66,7 +66,7 @@ class ModelArgs:
         if len(config) > 1:
             config.sort(key=len, reverse=True)
             assert len(config[0]) != len(config[1]), name # make sure only one 'best' match
-            
+        
         return cls(**transformer_configs[config[0]])
 
 
@@ -91,6 +91,10 @@ transformer_configs = {
     ),
     "llama-3.1-405b": dict(block_size=131072, n_layer=126, n_head=128, n_local_heads=8, dim=16384, intermediate_size=53248, vocab_size=128256, rope_base=500000,
         rope_scaling=dict(factor=8.0, low_freq_factor=1.0, high_freq_factor=4.0, original_max_position_embeddings=8192),
+    ),
+    "DeepSeek-R1-Distill-Qwen-7B": dict(
+        block_size=8192, n_layer=28, n_head=28, n_local_heads=4, dim=3584, intermediate_size=18944, vocab_size=152064, rope_base=1000000,
+        rope_scaling=dict(factor=8.0, low_freq_factor=1.0, high_freq_factor=4.0, original_max_position_embeddings=131072),
     ),
 }
 
@@ -145,10 +149,17 @@ class Transformer(nn.Module):
             b.attention.kv_cache = KVCache(max_batch_size, max_seq_length, self.config.n_local_heads, head_dim, dtype)
 
         self.freqs_cis = precompute_freqs_cis(self.config.block_size, self.config.dim // self.config.n_head, self.config.rope_base, dtype, self.config.rope_scaling)
+        device = next(self.parameters()).device
+        self.causal_mask = torch.tril(torch.ones(self.max_seq_length, self.max_seq_length, dtype=torch.bool, device=device))
+        
 
-    def forward(self, mask: BlockMask, idx: Tensor, input_pos: Optional[Tensor] = None) -> Tensor:
+    def forward(self, idx: Tensor, input_pos: Optional[Tensor] = None, mask: Optional[BlockMask] = None) -> Tensor:
         assert self.freqs_cis is not None, "Caches must be initialized first"
-        mask.mask_mod = self.get_mask_mod(mask.mask_mod, input_pos[0])
+        if(mask is None):
+            mask = self.causal_mask[None, None, input_pos]
+            mask = mask.to(device=idx.device)
+        else:
+            mask.mask_mod = self.get_mask_mod(mask.mask_mod, input_pos[0])
         freqs_cis = self.freqs_cis[input_pos]
         x = self.tok_embeddings(idx)
 
@@ -171,7 +182,7 @@ class TransformerBlock(nn.Module):
         self.ffn_norm = RMSNorm(config.dim, config.norm_eps)
         self.attention_norm = RMSNorm(config.dim, config.norm_eps)
 
-    def forward(self, x: Tensor, input_pos: Tensor, freqs_cis: Tensor, mask: BlockMask) -> Tensor:
+    def forward(self, x: Tensor, input_pos: Tensor, freqs_cis: Tensor, mask: Union[BlockMask, torch.Tensor]) -> Tensor:
         h = x + self.attention(self.attention_norm(x), freqs_cis, mask, input_pos)
         out = h + self.feed_forward(self.ffn_norm(h))
         return out
@@ -184,7 +195,7 @@ class Attention(nn.Module):
 
         total_head_dim = (config.n_head + 2 * config.n_local_heads) * config.head_dim
         # key, query, value projections for all heads, but in a batch
-        self.wqkv = nn.Linear(config.dim, total_head_dim, bias=False)
+        self.wqkv = nn.Linear(config.dim, total_head_dim, bias=True)
         self.wo = nn.Linear(config.dim, config.dim, bias=False)
         self.kv_cache = None
 
@@ -200,8 +211,12 @@ class Attention(nn.Module):
             wk = state_dict.pop(prefix + "wk.weight")
             wv = state_dict.pop(prefix + "wv.weight")
             state_dict[prefix + "wqkv.weight"] = torch.cat([wq, wk, wv])
+            wq = state_dict.pop(prefix + "wq.bias")
+            wk = state_dict.pop(prefix + "wk.bias")
+            wv = state_dict.pop(prefix + "wv.bias")
+            state_dict[prefix + "wqkv.bias"] = torch.cat([wq, wk, wv])
 
-    def forward(self, x: Tensor, freqs_cis: Tensor, mask: BlockMask, input_pos: Optional[Tensor] = None) -> Tensor:
+    def forward(self, x: Tensor, freqs_cis: Tensor, mask: Union[BlockMask, torch.Tensor], input_pos: Optional[Tensor] = None) -> Tensor:
         bsz, seqlen, _ = x.shape
 
         kv_size = self.n_local_heads * self.head_dim
@@ -219,7 +234,14 @@ class Attention(nn.Module):
         if self.kv_cache is not None:
             k, v = self.kv_cache.update(input_pos, k, v)
 
-        y = flex_attention(q, k, v, block_mask=mask, enable_gqa=(self.n_head != self.n_local_heads))
+        if self.n_head != self.n_local_heads:
+            assert isinstance(mask, torch.Tensor), "mask must be a torch.Tensor when n_head != n_local_heads"
+            k = k.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
+            v = v.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
+            y = F.scaled_dot_product_attention(q, k, v, attn_mask=mask, dropout_p=0.0)
+        else:
+            assert isinstance(mask, BlockMask), "mask must be a BlockMask when n_head == n_local_heads"
+            y = flex_attention(q, k, v, block_mask=mask, enable_gqa=(self.n_head != self.n_local_heads))
 
         y = y.transpose(1, 2).contiguous().view(bsz, seqlen, self.dim)
 

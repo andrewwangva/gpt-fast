@@ -2,6 +2,7 @@ import os
 import sentencepiece as spm
 import tiktoken
 from tiktoken.load import load_tiktoken_bpe
+from tokenizers import Tokenizer
 from pathlib import Path
 from typing import Dict
 
@@ -37,6 +38,27 @@ class SentencePieceWrapper(TokenizerInterface):
 
     def eos_id(self):
         return self.processor.eos_id()
+
+class HFJsonTokenizerWrapper:
+    def __init__(self, model_path):
+        model_path = Path(model_path)
+        assert model_path.exists(), f"Tokenizer file not found: {model_path}"
+        self.tokenizer = Tokenizer.from_file(str(model_path))
+
+        self._bos_id = 151646
+        self._eos_id = 151643
+    def encode(self, text):
+        return self.tokenizer.encode(text).ids
+
+    def decode(self, tokens):
+        return self.tokenizer.decode(tokens)
+
+    def bos_id(self):
+        return self._bos_id
+
+    def eos_id(self):
+        return self._eos_id
+
 
 class TiktokenWrapper(TokenizerInterface):
     """
@@ -108,5 +130,7 @@ def get_tokenizer(tokenizer_model_path, model_name):
 
     if "llama-3" in str(model_name).lower():
         return TiktokenWrapper(tokenizer_model_path)
+    elif "qwen" in str(model_name).lower():
+        return HFJsonTokenizerWrapper(tokenizer_model_path)
     else:
         return SentencePieceWrapper(tokenizer_model_path)
