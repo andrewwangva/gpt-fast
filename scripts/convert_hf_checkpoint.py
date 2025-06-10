@@ -115,11 +115,13 @@ def convert_hf_checkpoint(
             q = final_result[key]
             k = final_result[key.replace("wq", "wk")]
             v = final_result[key.replace("wq", "wv")]
-            print(key, q.shape, k.shape, v.shape)
-            q = permute(q, config.n_head)
-            k = permute(k, config.n_local_heads)
-            print("reshaped", q.shape, k.shape, v.shape)
-            final_result[key.replace("wq", "wqkv")] = torch.cat([q, k, v])
+            print(key, q)
+            #q = permute(q, config.n_head)
+            #k = permute(k, config.n_local_heads)
+            #final_result[key.replace("wq", "wqkv")] = torch.cat([q, k, v])
+            final_result[key.replace("wq", "q_proj")] = q
+            final_result[key.replace("wq", "k_proj")] = k
+            final_result[key.replace("wq", "v_proj")] = v
             del final_result[key]
             del final_result[key.replace("wq", "wk")]
             del final_result[key.replace("wq", "wv")]
@@ -127,8 +129,10 @@ def convert_hf_checkpoint(
             q = final_result[key]
             k = final_result[key.replace("wq", "wk")]
             v = final_result[key.replace("wq", "wv")]
-            print(key, q.shape, k.shape, v.shape)
-            final_result[key.replace("wq", "wqkv")] = torch.cat([q, k, v])
+            #final_result[key.replace("wq", "wqkv")] = torch.cat([q, k, v])
+            final_result[key.replace("wq", "q_proj")] = q
+            final_result[key.replace("wq", "k_proj")] = k
+            final_result[key.replace("wq", "v_proj")] = v
             del final_result[key]
             del final_result[key.replace("wq", "wk")]
             del final_result[key.replace("wq", "wv")]
