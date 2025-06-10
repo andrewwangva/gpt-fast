@@ -44,6 +44,7 @@ class ModelArgs:
     rope_base: float = 10000
     norm_eps: float = 1e-5
     rope_scaling: Optional[dict] = None
+    max_position_embeddings: int = 1028
 
     def __post_init__(self):
         if self.n_local_heads == -1:
@@ -93,7 +94,7 @@ transformer_configs = {
         rope_scaling=dict(factor=8.0, low_freq_factor=1.0, high_freq_factor=4.0, original_max_position_embeddings=8192),
     ),
     "DeepSeek-R1-Distill-Qwen-7B": dict(
-        block_size=8192, n_layer=28, n_head=28, n_local_heads=4, dim=3584, intermediate_size=18944, vocab_size=152064, rope_base=1000000,
+        block_size=8192, n_layer=28, n_head=28, n_local_heads=4, dim=3584, intermediate_size=18944, vocab_size=152064, rope_base=10000, norm_eps=1e-6,
         rope_scaling=dict(factor=8.0, low_freq_factor=1.0, high_freq_factor=4.0, original_max_position_embeddings=131072),
     ),
 }
@@ -148,23 +149,24 @@ class Transformer(nn.Module):
         for b in self.layers:
             b.attention.kv_cache = KVCache(max_batch_size, max_seq_length, self.config.n_local_heads, head_dim, dtype)
 
-        self.freqs_cis = precompute_freqs_cis(self.config.block_size, self.config.dim // self.config.n_head, self.config.rope_base, dtype, self.config.rope_scaling)
+        #self.freqs_cis = precompute_freqs_cis(self.config.block_size, self.config.dim // self.config.n_head, self.config.rope_base, dtype, self.config.rope_scaling)
+        self.cos, self.sin = precompute_freqs_cis(self.config.max_position_embeddings, self.config.head_dim, self.config.rope_base, dtype, None)
         device = next(self.parameters()).device
         self.causal_mask = torch.tril(torch.ones(self.max_seq_length, self.max_seq_length, dtype=torch.bool, device=device))
         
 
     def forward(self, idx: Tensor, input_pos: Optional[Tensor] = None, mask: Optional[BlockMask] = None) -> Tensor:
-        assert self.freqs_cis is not None, "Caches must be initialized first"
+        assert self.cos is not None or self.sin is None, "Caches must be initialized first"
         if(mask is None):
             mask = self.causal_mask[None, None, input_pos]
             mask = mask.to(device=idx.device)
         else:
             mask.mask_mod = self.get_mask_mod(mask.mask_mod, input_pos[0])
-        freqs_cis = self.freqs_cis[input_pos]
+        #freqs_cis = self.freqs_cis[input_pos]
         x = self.tok_embeddings(idx)
 
         for i, layer in enumerate(self.layers):
-            x = layer(x, input_pos, freqs_cis, mask)
+            x = layer(x, input_pos, self.cos, self.sin, mask)
         x = self.norm(x)
         logits = self.output(x)
         return logits
@@ -182,12 +184,157 @@ class TransformerBlock(nn.Module):
         self.ffn_norm = RMSNorm(config.dim, config.norm_eps)
         self.attention_norm = RMSNorm(config.dim, config.norm_eps)
 
-    def forward(self, x: Tensor, input_pos: Tensor, freqs_cis: Tensor, mask: Union[BlockMask, torch.Tensor]) -> Tensor:
-        h = x + self.attention(self.attention_norm(x), freqs_cis, mask, input_pos)
+    def forward(self, x: Tensor, input_pos: Tensor, cos: Tensor, sin: Tensor, mask: Union[BlockMask, torch.Tensor]) -> Tensor:
+        h = x + self.attention(self.attention_norm(x), cos, sin, mask, input_pos)
         out = h + self.feed_forward(self.ffn_norm(h))
         return out
 
+class Qwen2RotaryEmbedding(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.dim = config.head_dim
+        self.max_position_embeddings = config.rope_scaling["original_max_position_embeddings"]
+        self.base = config.rope_base
+        self.max_seq_len_cached = config.max_position_embeddings
 
+        self.register_buffer("inv_freq", None, persistent=False)
+        self.register_buffer("cos_cached", None, persistent=False)
+        self.register_buffer("sin_cached", None, persistent=False)
+
+    def _set_cos_sin_cache(self, device, dtype):
+        inv_freq = 1.0 / (self.base ** (torch.arange(0, self.dim, 2, device=device).float() / self.dim))
+        self.inv_freq = inv_freq
+        t = torch.arange(self.max_seq_len_cached, device=device, dtype=torch.int64).type_as(inv_freq)
+        freqs = torch.outer(t, self.inv_freq)
+        emb = torch.cat((freqs, freqs), dim=-1)
+
+        self.cos_cached = emb.cos().to(dtype)
+        self.sin_cached = emb.sin().to(dtype)
+
+    def forward(self, x):
+        batch_size = x.shape[0]
+
+        if self.cos_cached is None or self.sin_cached is None:
+            self._set_cos_sin_cache(device=x.device, dtype=x.dtype)
+        
+        cos = self.cos_cached.to(dtype=x.dtype)      # [seq_len, dim]
+        sin = self.sin_cached.to(dtype=x.dtype)
+        print("shapes", cos.shape, sin.shape)
+        cos = cos[None, :, :].expand(batch_size, -1, -1)
+        sin = sin[None, :, :].expand(batch_size, -1, -1)
+        return cos, sin
+
+
+
+# Copied from transformers.models.llama.modeling_llama.rotate_half
+def rotate_half(x):
+    """Rotates half the hidden dims of the input."""
+    x1 = x[..., : x.shape[-1] // 2]
+    x2 = x[..., x.shape[-1] // 2 :]
+    return torch.cat((-x2, x1), dim=-1)
+
+
+# Copied from transformers.models.mistral.modeling_mistral.apply_rotary_pos_emb
+def apply_rotary_pos_emb(q, k, cos, sin, position_ids, unsqueeze_dim=1):
+    """Applies Rotary Position Embedding to the query and key tensors.
+    Args:
+        q (`torch.Tensor`): The query tensor.
+        k (`torch.Tensor`): The key tensor.
+        cos (`torch.Tensor`): The cosine part of the rotary embedding.
+        sin (`torch.Tensor`): The sine part of the rotary embedding.
+        position_ids (`torch.Tensor`):
+            The position indices of the tokens corresponding to the query and key tensors. For example, this can be
+            used to pass offsetted position ids when working with a KV-cache.
+        unsqueeze_dim (`int`, *optional*, defaults to 1):
+            The 'unsqueeze_dim' argument specifies the dimension along which to unsqueeze cos[position_ids] and
+            sin[position_ids] so that they can be properly broadcasted to the dimensions of q and k. For example, note
+            that cos[position_ids] and sin[position_ids] have the shape [batch_size, seq_len, head_dim]. Then, if q and
+            k have the shape [batch_size, heads, seq_len, head_dim], then setting unsqueeze_dim=1 makes
+            cos[position_ids] and sin[position_ids] broadcastable to the shapes of q and k. Similarly, if q and k have
+            the shape [batch_size, seq_len, heads, head_dim], then set unsqueeze_dim=2.
+    Returns:
+        `tuple(torch.Tensor)` comprising of the query and key tensors rotated using the Rotary Position Embedding.
+    """
+    cos = cos[:, position_ids].unsqueeze(unsqueeze_dim)
+    sin = sin[:, position_ids].unsqueeze(unsqueeze_dim)
+    
+    q_embed = (q * cos) + (rotate_half(q) * sin)
+    k_embed = (k * cos) + (rotate_half(k) * sin)
+    return q_embed, k_embed
+
+class Attention(nn.Module):
+    def __init__(self, config: ModelArgs):
+        super().__init__()
+        assert config.dim % config.n_head == 0
+
+        total_head_dim = (config.n_head + 2 * config.n_local_heads) * config.head_dim
+        # key, query, value projections for all heads, but in a batch
+        self.q_proj = nn.Linear(config.dim, config.n_head * config.head_dim, bias=True)
+        self.k_proj = nn.Linear(config.dim, config.n_local_heads * config.head_dim, bias=True)
+        self.v_proj = nn.Linear(config.dim, config.n_local_heads * config.head_dim, bias=True)
+
+        self.wo = nn.Linear(config.dim, config.dim, bias=False)
+        self.kv_cache = None
+
+        self.n_head = config.n_head
+        self.head_dim = config.head_dim
+        self.n_local_heads = config.n_local_heads
+        self.dim = config.dim
+
+        self.rotary_emb = Qwen2RotaryEmbedding(config=config)
+        self._register_load_state_dict_pre_hook(self.load_hook)
+
+    def load_hook(self, state_dict, prefix, *args):
+        if prefix + "wq.weight" in state_dict:
+            wq = state_dict.pop(prefix + "wq.weight")
+            wk = state_dict.pop(prefix + "wk.weight")
+            wv = state_dict.pop(prefix + "wv.weight")
+            state_dict[prefix + "q_proj.weight"] = wq
+            state_dict[prefix + "k_proj.weight"] = wk
+            state_dict[prefix + "v_proj.weight"] = wv
+            wq_bias = state_dict.pop(prefix + "wq.bias")
+            wk_bias = state_dict.pop(prefix + "wk.bias")
+            wv_bias = state_dict.pop(prefix + "wv.bias")
+            state_dict[prefix + "q_proj.bias"] = wq_bias
+            state_dict[prefix + "k_proj.bias"] = wk_bias
+            state_dict[prefix + "v_proj.bias"] = wv_bias
+
+    def forward(self, x: Tensor, cos: Tensor, sin: Tensor, mask: Union[BlockMask, torch.Tensor], input_pos: Optional[Tensor] = None) -> Tensor:
+        bsz, seqlen, _ = x.shape
+
+        kv_size = self.n_local_heads * self.head_dim
+        q, k, v = self.q_proj(x), self.k_proj(x), self.v_proj(x)
+
+        q = q.view(bsz, seqlen, self.n_head, self.head_dim)
+        k = k.view(bsz, seqlen, self.n_local_heads, self.head_dim)
+        v = v.view(bsz, seqlen, self.n_local_heads, self.head_dim)
+        q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
+        cos, sin = self.rotary_emb(v)
+        q, k = apply_rotary_pos_emb(q, k, cos, sin, input_pos)
+        #q = apply_rotary_emb(q, freqs_cis)
+        #k = apply_rotary_emb(k, freqs_cis)
+
+        
+
+        if self.kv_cache is not None:
+            k, v = self.kv_cache.update(input_pos, k, v)
+
+        if self.n_head != self.n_local_heads:
+            assert isinstance(mask, torch.Tensor), "mask must be a torch.Tensor when n_head != n_local_heads"
+            k = k.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
+            v = v.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
+            y = F.scaled_dot_product_attention(q, k, v, attn_mask=mask, dropout_p=0.0)
+        else:
+            assert isinstance(mask, BlockMask), "mask must be a BlockMask when n_head == n_local_heads"
+            y = flex_attention(q, k, v, block_mask=mask, enable_gqa=(self.n_head != self.n_local_heads))
+
+        y = y.transpose(1, 2).contiguous().view(bsz, seqlen, self.dim)
+
+        y = self.wo(y)
+        return y
+
+
+"""
 class Attention(nn.Module):
     def __init__(self, config: ModelArgs):
         super().__init__()
@@ -247,7 +394,7 @@ class Attention(nn.Module):
 
         y = self.wo(y)
         return y
-
+"""
 
 class FeedForward(nn.Module):
     def __init__(self, config: ModelArgs) -> None:
@@ -259,7 +406,7 @@ class FeedForward(nn.Module):
     def forward(self, x: Tensor) -> Tensor:
         return self.w2(F.silu(self.w1(x)) * self.w3(x))
 
-
+"""
 class RMSNorm(nn.Module):
     def __init__(self, dim: int, eps: float = 1e-5):
         super().__init__()
@@ -272,6 +419,22 @@ class RMSNorm(nn.Module):
     def forward(self, x: Tensor) -> Tensor:
         output = self._norm(x.float()).type_as(x)
         return output * self.weight
+"""
+class RMSNorm(nn.Module):
+    def __init__(self, dim, eps: float = 1e-5):
+        """
+        Qwen2RMSNorm is equivalent to T5LayerNorm
+        """
+        super().__init__()
+        self.eps = eps
+        self.weight = nn.Parameter(torch.ones(dim))
+
+    def forward(self, hidden_states):
+        input_dtype = hidden_states.dtype
+        hidden_states = hidden_states.to(torch.float32)
+        variance = hidden_states.pow(2).mean(-1, keepdim=True)
+        hidden_states = hidden_states * torch.rsqrt(variance + self.eps)
+        return self.weight * hidden_states.to(input_dtype)
 
 
 def apply_rope_scaling(freqs: torch.Tensor, rope_scaling: Optional[dict] = None):
@@ -301,14 +464,18 @@ def precompute_freqs_cis(
     dtype: torch.dtype = torch.bfloat16,
     rope_scaling: Optional[dict] = None,
 ) -> Tensor:
-    freqs = 1.0 / (base ** (torch.arange(0, n_elem, 2)[: (n_elem // 2)].float() / n_elem))
+    freqs = 1.0 / (base ** (torch.arange(0, n_elem, 2).float() / n_elem))
     if rope_scaling is not None:
         freqs = apply_rope_scaling(freqs, rope_scaling)
-    t = torch.arange(seq_len, device=freqs.device)
+    t = torch.arange(seq_len, device=freqs.device).type_as(freqs)
     freqs = torch.outer(t, freqs)
-    freqs_cis = torch.polar(torch.ones_like(freqs), freqs)
-    cache = torch.stack([freqs_cis.real, freqs_cis.imag], dim=-1)
-    return cache.to(dtype=dtype)
+    emb = torch.cat((freqs, freqs), dim=-1)
+
+    cos = emb.cos().to(dtype)
+    sin = emb.sin().to(dtype)
+    cos = cos[None, :, :].expand(1, -1, -1)
+    sin = sin[None, :, :].expand(1, -1, -1)
+    return cos, sin
 
 
 def apply_rotary_emb(x: Tensor, freqs_cis: Tensor) -> Tensor:
