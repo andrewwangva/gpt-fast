@@ -97,6 +97,10 @@ transformer_configs = {
         block_size=8192, n_layer=28, n_head=28, n_local_heads=4, dim=3584, intermediate_size=18944, vocab_size=152064, rope_base=10000, norm_eps=1e-6,
         rope_scaling=dict(factor=8.0, low_freq_factor=1.0, high_freq_factor=4.0, original_max_position_embeddings=131072),
     ),
+    "DeepSeek-R1-Distill-Qwen-1.5B": dict(
+        block_size=8192, n_layer=28, n_head=12, n_local_heads=2, dim=1536, intermediate_size=8960, vocab_size=151936, rope_base=10000, norm_eps=1e-6,
+        rope_scaling=dict(factor=8.0, low_freq_factor=1.0, high_freq_factor=4.0, original_max_position_embeddings=131072),
+    ),
 }
 
 class KVCache(nn.Module):
@@ -219,7 +223,6 @@ class Qwen2RotaryEmbedding(nn.Module):
         
         cos = self.cos_cached.to(dtype=x.dtype)      # [seq_len, dim]
         sin = self.sin_cached.to(dtype=x.dtype)
-        print("shapes", cos.shape, sin.shape)
         cos = cos[None, :, :].expand(batch_size, -1, -1)
         sin = sin[None, :, :].expand(batch_size, -1, -1)
         return cos, sin
@@ -277,6 +280,7 @@ class Attention(nn.Module):
         self.kv_cache = None
 
         self.n_head = config.n_head
+        self.scale = config.head_dim ** -0.5
         self.head_dim = config.head_dim
         self.n_local_heads = config.n_local_heads
         self.dim = config.dim
@@ -309,7 +313,7 @@ class Attention(nn.Module):
         k = k.view(bsz, seqlen, self.n_local_heads, self.head_dim)
         v = v.view(bsz, seqlen, self.n_local_heads, self.head_dim)
         q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
-        cos, sin = self.rotary_emb(v)
+        #cos, sin = self.rotary_emb(v)
         q, k = apply_rotary_pos_emb(q, k, cos, sin, input_pos)
         #q = apply_rotary_emb(q, freqs_cis)
         #k = apply_rotary_emb(k, freqs_cis)
@@ -318,12 +322,12 @@ class Attention(nn.Module):
 
         if self.kv_cache is not None:
             k, v = self.kv_cache.update(input_pos, k, v)
-
         if self.n_head != self.n_local_heads:
             assert isinstance(mask, torch.Tensor), "mask must be a torch.Tensor when n_head != n_local_heads"
             k = k.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
             v = v.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
-            y = F.scaled_dot_product_attention(q, k, v, attn_mask=mask, dropout_p=0.0)
+            y = F.scaled_dot_product_attention(q, k, v, attn_mask=mask, dropout_p=0.0, scale=self.scale)
+            y = F.scaled_dot_product_attention(q, k, v, dropout_p=0.0, scale=self.scale, attn_mask=mask)
         else:
             assert isinstance(mask, BlockMask), "mask must be a BlockMask when n_head == n_local_heads"
             y = flex_attention(q, k, v, block_mask=mask, enable_gqa=(self.n_head != self.n_local_heads))
