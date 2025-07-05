@@ -34,6 +34,7 @@ def convert_hf_checkpoint(
     # Load the json file containing weight mapping
     model_map_json_safetensors = checkpoint_dir / 'model.safetensors.index.json'
     model_map_json_pytorch = checkpoint_dir / "pytorch_model.bin.index.json"
+    model_safetensors_single = checkpoint_dir / 'model.safetensors' 
     model_map_json = None
    
     try:
@@ -50,10 +51,26 @@ def convert_hf_checkpoint(
       except AssertionError:
         print(f"{model_map_json_pytorch} not found")
    
-    if model_map_json is None: raise Exception("No model map found!")
+    if model_map_json is None and model_safetensors_single.is_file():
+        print(f"Found single safetensors file at {model_safetensors_single}")
+        merged_result = load_safetensors_file(str(model_safetensors_single), device="cpu")
+    elif model_map_json is not None:
+        with open(model_map_json) as json_map:
+            bin_index = json.load(json_map)
+        
+        bin_files = {checkpoint_dir / bin for bin in bin_index["weight_map"].values()}
+        
+        merged_result = {}
+        for file in sorted(bin_files):
+           if "safetensors" in str(file):
+               state_dict = load_safetensors_file(str(file), device="cpu")
+               merged_result.update(state_dict)
+           else:
+               state_dict = torch.load(str(file), map_location="cpu", mmap=True, weights_only=True)
+               merged_result.update(state_dict)
+    else:
+        raise Exception("No model files found! Expected either index files or single model.safetensors")
 
-    with open(model_map_json) as json_map:
-        bin_index = json.load(json_map)
 
     weight_map = {
         "model.embed_tokens.weight": "tok_embeddings.weight",
@@ -73,7 +90,6 @@ def convert_hf_checkpoint(
         "model.norm.weight": "norm.weight",
         "lm_head.weight": "output.weight",
     }
-    bin_files = {checkpoint_dir / bin for bin in bin_index["weight_map"].values()}
 
     def permute(w, n_head):
         dim = config.dim
@@ -83,14 +99,6 @@ def convert_hf_checkpoint(
             .reshape(config.head_dim * n_head, dim)
         )
 
-    merged_result = {}
-    for file in sorted(bin_files):
-       if "safetensors" in str(file):
-           state_dict = load_safetensors_file(str(file), device="cpu")
-           merged_result.update(state_dict)
-       else:
-           state_dict = torch.load(str(file), map_location="cpu", mmap=True, weights_only=True)
-           merged_result.update(state_dict)
     for key, tensor in merged_result.items():
         if isinstance(tensor, torch.Tensor):
             print(f"{key}: {tuple(tensor.shape)}")

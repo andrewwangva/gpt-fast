@@ -5,6 +5,8 @@ from tiktoken.load import load_tiktoken_bpe
 from tokenizers import Tokenizer
 from pathlib import Path
 from typing import Dict
+from jinja2 import Template
+import json
 
 class TokenizerInterface:
     def __init__(self, model_path):
@@ -47,6 +49,14 @@ class HFJsonTokenizerWrapper:
 
         self._bos_id = 151646
         self._eos_id = 151643
+
+        config_path = model_path.parent / "tokenizer_config.json"
+        if config_path.exists():
+            with open(config_path, "r", encoding="utf-8") as f:
+                config = json.load(f)
+                self.chat_template = config.get("chat_template", None)
+        else:
+            self.chat_template = None
     def encode(self, text):
         return self.tokenizer.encode(text).ids
 
@@ -58,6 +68,13 @@ class HFJsonTokenizerWrapper:
 
     def eos_id(self):
         return self._eos_id
+
+    def render_chat(self, messages, add_generation_prompt=True):
+        if self.chat_template is None:
+            raise ValueError("No chat_template found in tokenizer_config.json")
+
+        template = Template(self.chat_template, trim_blocks=True, lstrip_blocks=True)
+        return template.render(messages=messages, add_generation_prompt=add_generation_prompt)
 
 
 class TiktokenWrapper(TokenizerInterface):
