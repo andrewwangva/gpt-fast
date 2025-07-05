@@ -330,6 +330,8 @@ def main(
     t0 = time.time()
     model = _load_model(checkpoint_path, device, precision, use_tp)
 
+    
+
     if is_speculative:
         draft_model = _load_model(draft_checkpoint_path, device, precision, use_tp)
     else:
@@ -339,6 +341,12 @@ def main(
     print(f"Time to load model: {time.time() - t0:.02f} seconds")
 
     tokenizer = get_tokenizer(tokenizer_path, checkpoint_path)
+
+
+    prompt = tokenizer.render_chat([
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": prompt}
+    ]) #fix this to be more robust
 
     if isinstance(prompt, str):
         encoded = encode_tokens(tokenizer, prompt, bos=True, device=device)

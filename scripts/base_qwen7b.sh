@@ -1,2 +1,2 @@
-export MODEL_REPO=deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
-time python generate.py --compile --checkpoint_path checkpoints/$MODEL_REPO/model.pth --prompt "The fifth smallest factor of 2012 is" --max_new_tokens 200 --num_samples 1  --temperature 0 --compile_prefill
+export MODEL_REPO=deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+time python math_eval.py --compile --checkpoint_path checkpoints/$MODEL_REPO/model.pth --prompt "What is 1000 * 100?" --max_new_tokens 1000 --num_samples 1  --temperature 0 --compile_prefill

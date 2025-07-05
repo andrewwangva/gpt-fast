@@ -313,11 +313,8 @@ class Attention(nn.Module):
         k = k.view(bsz, seqlen, self.n_local_heads, self.head_dim)
         v = v.view(bsz, seqlen, self.n_local_heads, self.head_dim)
         q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
-        #cos, sin = self.rotary_emb(v)
-        q, k = apply_rotary_pos_emb(q, k, cos, sin, input_pos)
-        #q = apply_rotary_emb(q, freqs_cis)
-        #k = apply_rotary_emb(k, freqs_cis)
 
+        q, k = apply_rotary_pos_emb(q, k, cos, sin, input_pos)
         
 
         if self.kv_cache is not None:
