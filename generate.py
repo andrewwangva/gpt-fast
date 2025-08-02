@@ -77,10 +77,10 @@ def prefill(model: Transformer, x: torch.Tensor, input_pos: torch.Tensor, **samp
 def decode_one_token(model: Transformer, x: torch.Tensor, input_pos: torch.Tensor, block_mask: BlockMask, **sampling_kwargs) -> Tuple[torch.Tensor, torch.Tensor]:
     # input_pos: [B, 1]
     assert input_pos.shape[-1] == 1
-    block_index = input_pos // block_mask.BLOCK_SIZE[0]
-    mask = block_mask[:, :, block_index]
-    mask.mask_mod = block_mask.mask_mod
-    mask.seq_lengths = (1, model.max_seq_length)
+    #block_index = input_pos // block_mask.BLOCK_SIZE[0]
+    #mask = block_mask[:, :, block_index]
+    #mask.mask_mod = block_mask.mask_mod
+    #mask.seq_lengths = (1, model.max_seq_length)
     logits = model(x, input_pos)
     return sample(logits, **sampling_kwargs)
 
@@ -103,6 +103,27 @@ def decode_n_tokens(model: Transformer, cur_token: torch.Tensor, input_pos: torc
 def model_forward(model, x, input_pos):
     return model(x, input_pos)
 
+
+def verify_tokens(p: torch.Tensor, q: torch.Tensor, target_probs: torch.Tensor) -> torch.Tensor:
+    """
+    p: [B, L] draft probabilities
+    q: [B, L] target probabilities
+    target_probs: [B, L, vocab_size] full softmax distribution of the target model
+
+    Returns indices [B_idx, L_idx] of tokens to reject (i.e., not meeting accept criteria).
+    """
+    # Calculate entropy across vocab dimension (dim=-1), shape: [B, L]
+    entropy = -torch.sum(target_probs * torch.log(target_probs + 1e-10), dim=-1)
+
+    # Conditions: accept if q > 0.2 and entropy < 0.75
+    accept_mask = (q > 0.2) & (entropy < 0.75)
+
+    # Invert: reject if not accepted
+    reject_mask = ~accept_mask
+    rejected_locations = reject_mask.nonzero(as_tuple=False)
+
+    return rejected_locations
+
 def speculative_decode(
     model: Transformer,
     draft_model: Transformer,
@@ -115,43 +136,66 @@ def speculative_decode(
     device = cur_token.device
     orig_input_pos = torch.tensor([input_pos], dtype=torch.int64, device=cur_token.device)
     draft_tokens, draft_probs = decode_n_tokens(draft_model, cur_token.view(1, -1), orig_input_pos.clone(), speculate_k, **sampling_kwargs)
-
-    draft_tokens = torch.cat(draft_tokens)
+    draft_tokens = torch.cat(draft_tokens) # [L, 1]
     # parallel inference on target model using draft tokens
     target_logits = model_forward(
         model,
-        torch.cat([cur_token.view(1), draft_tokens]).view(1, -1),
+        torch.cat([cur_token.view(1, 1), draft_tokens], dim=0).view(1, -1),
         torch.arange(input_pos, input_pos + speculate_k + 1, device=cur_token.device)
     )
-    target_probs = logits_to_probs(target_logits[0], **sampling_kwargs)
-    draft_probs = torch.stack(draft_probs)
+    target_probs = logits_to_probs(target_logits, **sampling_kwargs)
+    draft_probs = torch.cat(draft_probs, dim=0).unsqueeze(0) #[B, L, 1]
+
     # q: target prob, p: draft prob
     # q >= p: always accept draft token
     # q < p: q/p prob to accept draft token
-    p = draft_probs[torch.arange(0, speculate_k, device=device), draft_tokens]
-    q = target_probs[torch.arange(0, speculate_k, device=device), draft_tokens]
-    accept_draft_prob = torch.minimum(torch.ones(()), q[:speculate_k]/ p)
-    rejected_locations = (torch.rand_like(accept_draft_prob) > accept_draft_prob).nonzero()
 
-    if rejected_locations.shape[0] == 0: # All draft tokens have been accepted
+    
+    p = draft_probs[:, torch.arange(0, speculate_k, device=device), draft_tokens.view(-1)] # [B, L, 1]
+    q = target_probs[:, torch.arange(0, speculate_k, device=device), draft_tokens.view(-1)] # [B, L, 1]
+
+    rejected_locations = verify_tokens(p, q, target_probs[:, :speculate_k])
+    #accept_draft_prob = torch.minimum(torch.ones(()), q[:speculate_k]/ p)
+    #rejected_locations = (torch.rand_like(accept_draft_prob) > accept_draft_prob).nonzero() #
+    if len(rejected_locations) == 0: # All draft tokens have been accepted
         accept_length = speculate_k + 1
-        last_token = multinomial_sample_one_no_sync(target_probs[-1])
+        last_token = multinomial_sample_one_no_sync(target_probs[:, -1]) # [B, 1]
         # fill last token into draft model
-        model_forward(
+        model_forward( #inputs should be x shape: torch.Size([1, 1]), input_pos: torch.Size([1])
             draft_model,
             draft_tokens[-1].view(1, -1),
             orig_input_pos + speculate_k,
         )
-        return torch.cat([draft_tokens, last_token])
+        return torch.cat([draft_tokens.view(-1), last_token[0].view(-1)], dim=0)
     else:
-        accept_length = rejected_locations[0].item()
-        p = draft_probs[accept_length]
-        q = target_probs[accept_length]
+        accept_length = rejected_locations[0, 1].item() # [B]
+        p = draft_probs[:, accept_length]
+        q = target_probs[:, accept_length]
         new = q - p
         new = torch.where(new > 0, new, 0.0)
         new = new / new.sum()
         next_token = multinomial_sample_one_no_sync(new)
-        return torch.cat([draft_tokens[:accept_length], next_token])
+        return torch.cat([draft_tokens[:accept_length].view(-1), next_token.view(-1)], dim=0)
+
+def pad_vocab(model: Transformer, target_vocab_size: int):
+    cur_vocab_size = model.output.weight.shape[0]
+    if cur_vocab_size >= target_vocab_size:
+        return model  # nothing to do
+
+    print(f"Patching vocab: {cur_vocab_size} -> {target_vocab_size}")
+    device = model.output.weight.device
+    dtype = model.output.weight.dtype
+
+    # Pad output projection
+    padding = torch.zeros((target_vocab_size - cur_vocab_size, model.output.weight.shape[1]), device=device, dtype=dtype)
+    model.output.weight = torch.nn.Parameter(torch.cat([model.output.weight.data, padding], dim=0))
+
+    # Pad token embedding
+    tok_emb_padding = torch.zeros((target_vocab_size - cur_vocab_size, model.tok_embeddings.weight.shape[1]), device=device, dtype=dtype)
+    model.tok_embeddings.weight = torch.nn.Parameter(torch.cat([model.tok_embeddings.weight.data, tok_emb_padding], dim=0))
+
+    return model
+
 
 @torch.no_grad()
 def generate(
@@ -208,15 +252,13 @@ def generate(
         input_pos = input_pos.item()  # for speculative decoding easier to keep on host
         while input_pos < T_new - 1:
             cur_token = next_token.view(())
-
             next_tokens = speculative_decode(
                 model, draft_model, cur_token, input_pos, speculate_k, **sampling_kwargs
             )
-
             accept_counts[len(next_tokens) - 1] += 1
             num_added = min(T_new - input_pos - 1, len(next_tokens))
-            seq[input_pos + 1 : input_pos + num_added + 1] = next_tokens[: num_added]
-            for i in next_tokens[: num_added,]:
+            seq[:, input_pos + 1 : input_pos + num_added + 1] = next_tokens[:num_added]
+            for i in next_tokens[:num_added]:
                 callback(i)
             input_pos = input_pos + num_added
             next_token = next_tokens[-1]
@@ -330,10 +372,11 @@ def main(
     t0 = time.time()
     model = _load_model(checkpoint_path, device, precision, use_tp)
 
-    
 
     if is_speculative:
         draft_model = _load_model(draft_checkpoint_path, device, precision, use_tp)
+        if draft_model.output.weight.shape[0] != model.output.weight.shape[0]:
+            pad_vocab(draft_model, model.output.weight.shape[0])
     else:
         draft_model = None
 

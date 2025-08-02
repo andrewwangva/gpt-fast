@@ -16,6 +16,7 @@ from torch.nn.attention.flex_attention import (
     BlockMask,
     flex_attention,
 )
+from torch.nn.attention import SDPBackend, sdpa_kernel
 
 
 def find_multiple(n: int, k: int) -> int:
@@ -44,7 +45,7 @@ class ModelArgs:
     rope_base: float = 10000
     norm_eps: float = 1e-5
     rope_scaling: Optional[dict] = None
-    max_position_embeddings: int = 1028
+    max_position_embeddings: int = 131072
 
     def __post_init__(self):
         if self.n_local_heads == -1:
@@ -94,11 +95,11 @@ transformer_configs = {
         rope_scaling=dict(factor=8.0, low_freq_factor=1.0, high_freq_factor=4.0, original_max_position_embeddings=8192),
     ),
     "DeepSeek-R1-Distill-Qwen-7B": dict(
-        block_size=8192, n_layer=28, n_head=28, n_local_heads=4, dim=3584, intermediate_size=18944, vocab_size=152064, rope_base=10000, norm_eps=1e-6,
+        block_size=32768, n_layer=28, n_head=28, n_local_heads=4, dim=3584, intermediate_size=18944, vocab_size=152064, rope_base=10000, norm_eps=1e-6,
         rope_scaling=dict(factor=8.0, low_freq_factor=1.0, high_freq_factor=4.0, original_max_position_embeddings=131072),
     ),
     "DeepSeek-R1-Distill-Qwen-1.5B": dict(
-        block_size=8192, n_layer=28, n_head=12, n_local_heads=2, dim=1536, intermediate_size=8960, vocab_size=151936, rope_base=10000, norm_eps=1e-6,
+        block_size=32768, n_layer=28, n_head=12, n_local_heads=2, dim=1536, intermediate_size=8960, vocab_size=151936, rope_base=10000, norm_eps=1e-6,
         rope_scaling=dict(factor=8.0, low_freq_factor=1.0, high_freq_factor=4.0, original_max_position_embeddings=131072),
     ),
 }
@@ -162,6 +163,7 @@ class Transformer(nn.Module):
     def forward(self, idx: Tensor, input_pos: Optional[Tensor] = None, mask: Optional[BlockMask] = None) -> Tensor:
         assert self.cos is not None or self.sin is None, "Caches must be initialized first"
         if(mask is None):
+            #mask = None
             mask = self.causal_mask[None, None, input_pos]
             mask = mask.to(device=idx.device)
         else:
@@ -188,7 +190,7 @@ class TransformerBlock(nn.Module):
         self.ffn_norm = RMSNorm(config.dim, config.norm_eps)
         self.attention_norm = RMSNorm(config.dim, config.norm_eps)
 
-    def forward(self, x: Tensor, input_pos: Tensor, cos: Tensor, sin: Tensor, mask: Union[BlockMask, torch.Tensor]) -> Tensor:
+    def forward(self, x: Tensor, input_pos: Tensor, cos: Tensor, sin: Tensor, mask: Union[BlockMask, torch.Tensor] = None) -> Tensor:
         h = x + self.attention(self.attention_norm(x), cos, sin, mask, input_pos)
         out = h + self.feed_forward(self.ffn_norm(h))
         return out
@@ -303,7 +305,7 @@ class Attention(nn.Module):
             state_dict[prefix + "k_proj.bias"] = wk_bias
             state_dict[prefix + "v_proj.bias"] = wv_bias
 
-    def forward(self, x: Tensor, cos: Tensor, sin: Tensor, mask: Union[BlockMask, torch.Tensor], input_pos: Optional[Tensor] = None) -> Tensor:
+    def forward(self, x: Tensor, cos: Tensor, sin: Tensor, mask: Union[BlockMask, torch.Tensor] = None, input_pos: Optional[Tensor] = None) -> Tensor:
         bsz, seqlen, _ = x.shape
 
         kv_size = self.n_local_heads * self.head_dim
@@ -320,11 +322,11 @@ class Attention(nn.Module):
         if self.kv_cache is not None:
             k, v = self.kv_cache.update(input_pos, k, v)
         if self.n_head != self.n_local_heads:
-            assert isinstance(mask, torch.Tensor), "mask must be a torch.Tensor when n_head != n_local_heads"
+            #assert isinstance(mask, torch.Tensor), "mask must be a torch.Tensor when n_head != n_local_heads"
             k = k.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
             v = v.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
-            y = F.scaled_dot_product_attention(q, k, v, attn_mask=mask, dropout_p=0.0, scale=self.scale)
-            y = F.scaled_dot_product_attention(q, k, v, dropout_p=0.0, scale=self.scale, attn_mask=mask)
+            with sdpa_kernel(SDPBackend.MATH):
+                y = F.scaled_dot_product_attention(q, k, v, dropout_p=0.0, scale=self.scale, attn_mask=mask)
         else:
             assert isinstance(mask, BlockMask), "mask must be a BlockMask when n_head == n_local_heads"
             y = flex_attention(q, k, v, block_mask=mask, enable_gqa=(self.n_head != self.n_local_heads))
