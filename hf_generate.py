@@ -13,8 +13,10 @@ import torch
 import torch._dynamo.config
 import torch._inductor.config
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
+from torch.nn.attention import SDPBackend, sdpa_kernel
 import contextlib
 
+torch.backends.cudnn.deterministic = True
 def device_sync(device):
     if "cuda" in device:
         torch.cuda.synchronize(device)
@@ -177,7 +179,6 @@ def generate_hf(
                 if new_token[0].item() == tokenizer.eos_token_id:
                     break
         else:
-            # Batch generation
             result = model.generate(
                 prompt_tokens,
                 generation_config=generation_config,
@@ -228,7 +229,16 @@ def _get_model_size(model):
 
 def encode_tokens(tokenizer, string, bos=True, device=default_device):
     """Encode string to tokens"""
-    tokens = tokenizer.encode(string, add_special_tokens=bos)
+    messages = [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": string}
+    ]
+    text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True
+    )
+    tokens = tokenizer.encode(text, add_special_tokens=bos)
     return torch.tensor(tokens, dtype=torch.long, device=device)
 
 B_INST, E_INST = "[INST]", "[/INST]"
@@ -273,7 +283,7 @@ def main(
 
     # Prepare prompt
     if isinstance(prompt, str):
-        encoded = encode_tokens(tokenizer, prompt, bos=True, device=device)
+        encoded = encode_tokens(tokenizer, prompt, bos=False, device=device)
     else:
         # Generate synthetic prompt
         vocab_size = len(tokenizer)
@@ -293,7 +303,6 @@ def main(
     }
     
     start = -1 if compile else 0
-
     for i in range(start, num_samples):
         device_sync(device=device)
         
@@ -360,7 +369,7 @@ def main(
             # Display first generation
             if batch_size > 1:
                 print("Only displaying the first generation of the batch")
-            print(tokenizer.decode(y[0].tolist(), skip_special_tokens=True))
+            print(tokenizer.decode(y[0].tolist(), skip_special_tokens=False))
         else:
             print()
             

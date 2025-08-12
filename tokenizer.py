@@ -57,11 +57,16 @@ class HFJsonTokenizerWrapper:
                 self.chat_template = config.get("chat_template", None)
         else:
             self.chat_template = None
+    
+    @property
+    def vocab_size(self):
+        return self.tokenizer.get_vocab_size()
+    
     def encode(self, text):
         return self.tokenizer.encode(text).ids
 
-    def decode(self, tokens):
-        return self.tokenizer.decode(tokens)
+    def decode(self, tokens, skip_special_tokens=True):
+        return self.tokenizer.decode(tokens, skip_special_tokens=skip_special_tokens)
 
     def bos_id(self):
         return self._bos_id

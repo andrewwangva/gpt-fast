@@ -121,65 +121,87 @@ def decode_n_tokens(model: Transformer, cur_token: torch.Tensor, input_pos: torc
 def model_forward(model, x, input_pos):
     return model(x, input_pos)
 
+def verify_tokens(p: torch.Tensor, q: torch.Tensor, target_probs: torch.Tensor) -> torch.Tensor:
+    """
+    p: [B, L] draft probabilities
+    q: [B, L] target probabilities
+    target_probs: [B, L, vocab_size] full softmax distribution of the target model
 
-def verify_tokens(p, q):
+    Returns indices [B_idx, L_idx] of tokens to reject (i.e., not meeting accept criteria).
     """
-    p has shape [B, spec, 1] and represents draft tokens
-    q has shape [B, L, 1] and represents draft tokens
-    """
-    return (q < 0.1).nonzero()
+    # Calculate entropy across vocab dimension (dim=-1), shape: [B, L]
+    entropy = -torch.sum(target_probs * torch.log(target_probs + 1e-10), dim=-1)
+
+    # Conditions: accept if q > 0.2 and entropy < 0.75
+    accept_mask = (q > 0.2) & (entropy < 0.75)
+    # Invert: reject if not accepted
+    reject_mask = ~accept_mask
+    rejected_locations = reject_mask.nonzero(as_tuple=False)
+    return rejected_locations
+
 def speculative_decode(
     model: Transformer,
     draft_model: Transformer,
     cur_token: torch.Tensor,
     input_pos: int,
     speculate_k: int,
+    eos_id: int,
     **sampling_kwargs
 ) -> torch.Tensor:
     # draft model inference sequentially
     device = cur_token.device
-    orig_input_pos = torch.tensor([input_pos], dtype=torch.int64, device=cur_token.device)
+    orig_input_pos = torch.tensor([input_pos], dtype=torch.int64, device=device)
+
     draft_tokens, draft_probs = decode_n_tokens(draft_model, cur_token.view(1, -1), orig_input_pos.clone(), speculate_k, **sampling_kwargs)
     draft_tokens = torch.cat(draft_tokens) # [L, 1]
-    # parallel inference on target model using draft tokens
     target_logits = model_forward(
         model,
         torch.cat([cur_token.view(1, 1), draft_tokens], dim=0).view(1, -1),
         torch.arange(input_pos, input_pos + speculate_k + 1, device=cur_token.device)
     )
-    target_probs = logits_to_probs(target_logits, **sampling_kwargs)
+    target_probs = logits_to_probs(target_logits,  **sampling_kwargs)
     draft_probs = torch.cat(draft_probs, dim=0).unsqueeze(0) #[B, L, 1]
-
+    
     # q: target prob, p: draft prob
     # q >= p: always accept draft token
     # q < p: q/p prob to accept draft token
 
-    
+
     p = draft_probs[:, torch.arange(0, speculate_k, device=device), draft_tokens.view(-1)] # [B, L, 1]
     q = target_probs[:, torch.arange(0, speculate_k, device=device), draft_tokens.view(-1)] # [B, L, 1]
+    
+    rejected_locations = verify_tokens(p, q, target_probs[:, :speculate_k])
 
-    rejected_locations = verify_tokens(p, q)
+    """
+    print("p", p)
+    print("q", q)
+    print("rejected_locations", rejected_locations)
+    """
     #accept_draft_prob = torch.minimum(torch.ones(()), q[:speculate_k]/ p)
     #rejected_locations = (torch.rand_like(accept_draft_prob) > accept_draft_prob).nonzero() #
     if len(rejected_locations) == 0: # All draft tokens have been accepted
         accept_length = speculate_k + 1
         last_token = multinomial_sample_one_no_sync(target_probs[:, -1]) # [B, 1]
-        # fill last token into draft model
+
         model_forward( #inputs should be x shape: torch.Size([1, 1]), input_pos: torch.Size([1])
             draft_model,
             draft_tokens[-1].view(1, -1),
-            orig_input_pos + speculate_k,
+            orig_input_pos + speculate_k, #remove model forward here
         )
-        return torch.cat([draft_tokens.view(-1), last_token[0].view(-1)], dim=0)
+        #return draft_tokens.view(-1)
+        return torch.cat([draft_tokens.view(-1), last_token.view(-1)], dim=0)
     else:
         accept_length = rejected_locations[0, 1].item() # [B]
+        """
         p = draft_probs[:, accept_length]
         q = target_probs[:, accept_length]
         new = q - p
         new = torch.where(new > 0, new, 0.0)
         new = new / new.sum()
         next_token = multinomial_sample_one_no_sync(new)
-        return torch.cat([draft_tokens[:accept_length].view(-1), next_token.view(-1)], dim=0)
+        """
+        last_token = multinomial_sample_one_no_sync(target_probs[:, accept_length])
+        return torch.cat([draft_tokens[:accept_length].view(-1), last_token.view(-1)], dim=0)
 
 def pad_vocab(model: Transformer, target_vocab_size: int):
     cur_vocab_size = model.output.weight.shape[0]
@@ -223,7 +245,7 @@ def process_batch(
         {"role": "user", "content": problem}
     ])
 
-    encoded = encode_tokens(tokenizer, prompt, bos=True, device=device)
+    encoded = encode_tokens(tokenizer, prompt, bos=False, device=device)
 
     torch.manual_seed(1234)  # for reproducibility
 
@@ -249,7 +271,6 @@ def process_batch(
     }
 
 
-
 @torch.no_grad()
 def generate(
     model: Transformer,
@@ -259,9 +280,9 @@ def generate(
     *,
     interactive: bool,
     draft_model: Transformer,
+    eos_id: int,
     speculate_k: Optional[int] = 8,
     callback = lambda x: x,
-    eos_id: Optional[int] = None,
     **sampling_kwargs
 ) -> torch.Tensor:
     """
@@ -275,12 +296,10 @@ def generate(
     if interactive:
         max_seq_length = 350
     else:
-        max_seq_length = min(T_new, model.config.max_position_embeddings)
+        max_seq_length = min(T_new, model.config.block_size)
 
     device, dtype = prompt.device, prompt.dtype
     max_seq_length = max_seq_length + speculate_k + 1 if is_speculative else max_seq_length
-
-    generation_limit = max_seq_length - 50
     with torch.device(device):
         print("setup", batch_size, max_seq_length)
         model.setup_caches(max_batch_size=batch_size, max_seq_length=max_seq_length)
@@ -296,9 +315,9 @@ def generate(
     input_pos = torch.arange(0, T, device=device)
     print(f"prefill x shape: {prompt.view(batch_size, -1).view(batch_size, -1).shape}, input_pos: {input_pos.shape}")
     print("devices", prompt.device, input_pos.device)
-    next_token = prefill(model, prompt.view(batch_size, -1), input_pos, **sampling_kwargs).clone()
     if is_speculative:
-        prefill(draft_model, prompt.view(batch_size, -1), input_pos, **sampling_kwargs)
+        next_token = prefill(draft_model, prompt.view(batch_size, -1), input_pos, **sampling_kwargs)
+    next_token = prefill(model, prompt.view(batch_size, -1), input_pos, **sampling_kwargs)
     seq[:, T] = next_token.squeeze()
 
     input_pos = torch.tensor([T], device=device, dtype=torch.int)
@@ -308,11 +327,9 @@ def generate(
         input_pos = input_pos.item()  # for speculative decoding easier to keep on host
         while input_pos < T_new - 1:
             cur_token = next_token.view(())
-
             next_tokens = speculative_decode(
-                model, draft_model, cur_token, input_pos, speculate_k, **sampling_kwargs
+                model, draft_model, cur_token, input_pos, speculate_k, eos_id, **sampling_kwargs
             )
-            
             accept_counts[len(next_tokens) - 1] += 1
             num_added = min(T_new - input_pos - 1, len(next_tokens))
             seq[:, input_pos + 1 : input_pos + num_added + 1] = next_tokens[:num_added]
@@ -320,21 +337,22 @@ def generate(
                 callback(i)
             input_pos = input_pos + num_added
             next_token = next_tokens[-1]
+            
+            # Check for EOS token to break early
+            if eos_id in next_tokens:
+                break
+        num_generated = input_pos - T
     else:
         print(f"x shape: {next_token.view(batch_size, -1).shape}, input_pos: {input_pos.shape}")
-        remaining_tokens = min(max_new_tokens - 1, generation_limit - T - 1)
-        if remaining_tokens <= 0:
-            remaining_tokens = 1
-        generated_tokens, _ = decode_n_tokens(model, next_token.view(batch_size, -1), input_pos, remaining_tokens, callback=callback, eos_id=eos_id, **sampling_kwargs)
-        print(generated_tokens[0].shape, len(generated_tokens))
-        generated = torch.cat(generated_tokens, dim=-1)
-        print("generated shape:", generated.shape)
-        print("seq shape:", seq.shape)
-        seq[:, T + 1:T + 1 + generated.size(-1)] = generated
-        seq = seq[:, :T + 1 + generated.size(-1)]  # trim to the actual size
-
+        generated_tokens, _ = decode_n_tokens(model, next_token.view(batch_size, -1), input_pos, max_new_tokens - 1, callback=callback, **sampling_kwargs)
+        if generated_tokens:
+            # Stack the generated tokens along the sequence dimension
+            generated_tensor = torch.cat(generated_tokens, dim=-1)  # [batch_size, num_tokens]
+            num_generated = generated_tensor.size(-1)
+            seq[:, T + 1:T + 1 + num_generated] = generated_tensor
+    seq = seq[:, :T + 1 + num_generated]
     generate_stats = {
-        'accept_counts': accept_counts
+        'accept_counts': accept_counts,
     }
     return seq, generate_stats
 
@@ -596,9 +614,9 @@ def main(
                 speculate_k=speculate_k,
                 interactive=interactive,
                 callback=callback,
+                eos_id=tokenizer.eos_id(),
                 temperature=temperature,
                 top_k=top_k,
-                eos_id=tokenizer.eos_id()
             )
             aggregate_metrics['accept_counts'].append(metrics['accept_counts'])
         if i == -1:

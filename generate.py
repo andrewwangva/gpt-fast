@@ -47,18 +47,39 @@ def multinomial_sample_one_no_sync(probs_sort): # Does multinomial sampling with
     q = torch.empty_like(probs_sort).exponential_(1)
     return torch.argmax(probs_sort / q, dim=-1, keepdim=True).to(dtype=torch.int)
 
-def logits_to_probs(logits, temperature: float = 1.0, top_k: Optional[int] = None):
+def logits_to_probs(logits, temperature: float = 1.0, top_k: Optional[int] = None, top_p: Optional[float] = None):
     logits = logits / max(temperature, 1e-5)
 
     if top_k is not None:
         v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
         pivot = v.select(-1, -1).unsqueeze(-1)
         logits = torch.where(logits < pivot, -float("Inf"), logits)
-    probs = torch.nn.functional.softmax(logits, dim=-1)
-    return probs
+    
+    if top_p is not None:
+        # Convert to probabilities first
+        probs = torch.nn.functional.softmax(logits, dim=-1)
+        # Sort probabilities in descending order
+        sorted_probs, sorted_indices = torch.sort(probs, descending=True, dim=-1)
+        # Compute cumulative probabilities
+        cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
+        # Find cutoff where cumulative probability exceeds top_p
+        cutoff = cumulative_probs > top_p
+        # Shift cutoff by one to include the first token that exceeds top_p
+        cutoff[..., 1:] = cutoff[..., :-1].clone()
+        cutoff[..., 0] = False
+        # Zero out probabilities for tokens beyond cutoff
+        sorted_probs[cutoff] = 0.0
+        # Scatter back to original order
+        probs = torch.zeros_like(probs).scatter_(-1, sorted_indices, sorted_probs)
+        # Renormalize
+        probs = probs / probs.sum(dim=-1, keepdim=True)
+        return probs
+    else:
+        probs = torch.nn.functional.softmax(logits, dim=-1)
+        return probs
 
-def sample(logits, temperature: float = 1.0, top_k: Optional[int] = None):
-    probs = logits_to_probs(logits[:, -1], temperature, top_k)
+def sample(logits, temperature: float = 1.0, top_k: Optional[int] = None, top_p: Optional[float] = None):
+    probs = logits_to_probs(logits[:, -1], temperature, top_k, top_p)
     idx_next = multinomial_sample_one_no_sync(probs)
     return idx_next, probs
 
@@ -70,9 +91,9 @@ def causal_mask(b, h, q, kv):
 
 def prefill(model: Transformer, x: torch.Tensor, input_pos: torch.Tensor, **sampling_kwargs) -> torch.Tensor:
     # input_pos: [B, S]
-    mask = create_block_mask(causal_mask, 1, 1, input_pos.shape[0], model.max_seq_length, device=x.device)
+    #mask = create_block_mask(causal_mask, 1, 1, input_pos.shape[0], model.max_seq_length, device=x.device)
     logits = model(x, input_pos)
-    return sample(logits, **sampling_kwargs)[0]
+    return sample(logits, **sampling_kwargs)
 
 def decode_one_token(model: Transformer, x: torch.Tensor, input_pos: torch.Tensor, block_mask: BlockMask, **sampling_kwargs) -> Tuple[torch.Tensor, torch.Tensor]:
     # input_pos: [B, 1]
@@ -85,11 +106,11 @@ def decode_one_token(model: Transformer, x: torch.Tensor, input_pos: torch.Tenso
     return sample(logits, **sampling_kwargs)
 
 def decode_n_tokens(model: Transformer, cur_token: torch.Tensor, input_pos: torch.Tensor, num_new_tokens: int, callback=lambda _: _, **sampling_kwargs):
-    block_mask = create_block_mask(causal_mask, 1, 1, model.max_seq_length, model.max_seq_length, device=cur_token.device)
+    #block_mask = create_block_mask(causal_mask, 1, 1, model.max_seq_length, model.max_seq_length, device=cur_token.device)
     new_tokens, new_probs = [], []
     for i in range(num_new_tokens):
         next_token, next_prob = decode_one_token(
-            model, cur_token, input_pos, block_mask, **sampling_kwargs
+            model, cur_token, input_pos, None, **sampling_kwargs
         )
         input_pos += 1
         new_tokens.append(next_token.clone())
@@ -116,13 +137,63 @@ def verify_tokens(p: torch.Tensor, q: torch.Tensor, target_probs: torch.Tensor) 
     entropy = -torch.sum(target_probs * torch.log(target_probs + 1e-10), dim=-1)
 
     # Conditions: accept if q > 0.2 and entropy < 0.75
-    accept_mask = (q > 0.2) & (entropy < 0.75)
-
+    accept_mask = (q > 0.2)
     # Invert: reject if not accepted
     reject_mask = ~accept_mask
     rejected_locations = reject_mask.nonzero(as_tuple=False)
-
     return rejected_locations
+
+def compare_kv_caches(model1, model2, layer_idx=0, tolerance=1e-6):
+    """Compare KV caches between two models at a specific layer, respecting cache_position."""
+    attn1 = model1.layers[layer_idx].attention
+    attn2 = model2.layers[layer_idx].attention
+    cache1 = getattr(attn1, "kv_cache", None)
+    cache2 = getattr(attn2, "kv_cache", None)
+
+    if cache1 is None or cache2 is None:
+        print(f"Layer {layer_idx}: One or both caches are None")
+        return False
+
+    # Basic shape checks
+    if cache1.k_cache.shape != cache2.k_cache.shape or cache1.v_cache.shape != cache2.v_cache.shape:
+        print(
+            f"Layer {layer_idx}: Shape mismatch - "
+            f"K {cache1.k_cache.shape} vs {cache2.k_cache.shape}, "
+            f"V {cache1.v_cache.shape} vs {cache2.v_cache.shape}"
+        )
+        return False
+
+    # cache_position must match exactly (per-batch)
+    pos1 = cache1.cache_position
+    pos2 = cache2.cache_position
+    if pos1.shape != pos2.shape or not torch.equal(pos1, pos2):
+        print(
+            f"Layer {layer_idx}: cache_position mismatch\n"
+            f"  cache1: {pos1.detach().cpu().tolist()}\n"
+            f"  cache2: {pos2.detach().cpu().tolist()}"
+        )
+        return False
+
+    # Build a per-batch mask for positions < cache_position[b]
+    # Shapes: [B, H, S, D]
+    B, H, S, D = cache1.k_cache.shape
+    device = cache1.k_cache.device
+    idx = torch.arange(S, device=device)                      # [S]
+    # mask[b, s] = True if s < pos[b]
+    mask_bs = (idx.unsqueeze(0) < pos1.to(device).unsqueeze(1))  # [B, S]
+    mask = mask_bs.unsqueeze(1).unsqueeze(-1)                 # [B, 1, S, 1]
+
+    k_diff = (torch.abs(cache1.k_cache - cache2.k_cache) * mask).max()
+    v_diff = (torch.abs(cache1.v_cache - cache2.v_cache) * mask).max()
+
+    # For logging, convert to float
+    k_diff_val = float(k_diff.detach().cpu())
+    v_diff_val = float(v_diff.detach().cpu())
+    print(f"Layer {layer_idx}: K cache max diff: {k_diff_val:.8f}, V cache max diff: {v_diff_val:.8f}")
+
+    return (k_diff <= tolerance) and (v_diff <= tolerance)
+
+
 
 def speculative_decode(
     model: Transformer,
@@ -130,52 +201,63 @@ def speculative_decode(
     cur_token: torch.Tensor,
     input_pos: int,
     speculate_k: int,
+    eos_id: int,
     **sampling_kwargs
 ) -> torch.Tensor:
     # draft model inference sequentially
     device = cur_token.device
-    orig_input_pos = torch.tensor([input_pos], dtype=torch.int64, device=cur_token.device)
+    orig_input_pos = torch.tensor([input_pos], dtype=torch.int64, device=device)
+
     draft_tokens, draft_probs = decode_n_tokens(draft_model, cur_token.view(1, -1), orig_input_pos.clone(), speculate_k, **sampling_kwargs)
     draft_tokens = torch.cat(draft_tokens) # [L, 1]
-    # parallel inference on target model using draft tokens
     target_logits = model_forward(
         model,
         torch.cat([cur_token.view(1, 1), draft_tokens], dim=0).view(1, -1),
         torch.arange(input_pos, input_pos + speculate_k + 1, device=cur_token.device)
     )
-    target_probs = logits_to_probs(target_logits, **sampling_kwargs)
+    target_probs = logits_to_probs(target_logits,  **sampling_kwargs)
     draft_probs = torch.cat(draft_probs, dim=0).unsqueeze(0) #[B, L, 1]
-
+    
     # q: target prob, p: draft prob
     # q >= p: always accept draft token
     # q < p: q/p prob to accept draft token
 
-    
+
     p = draft_probs[:, torch.arange(0, speculate_k, device=device), draft_tokens.view(-1)] # [B, L, 1]
     q = target_probs[:, torch.arange(0, speculate_k, device=device), draft_tokens.view(-1)] # [B, L, 1]
-
+    
     rejected_locations = verify_tokens(p, q, target_probs[:, :speculate_k])
+
+    """
+    print("p", p)
+    print("q", q)
+    print("rejected_locations", rejected_locations)
+    """
     #accept_draft_prob = torch.minimum(torch.ones(()), q[:speculate_k]/ p)
     #rejected_locations = (torch.rand_like(accept_draft_prob) > accept_draft_prob).nonzero() #
     if len(rejected_locations) == 0: # All draft tokens have been accepted
         accept_length = speculate_k + 1
         last_token = multinomial_sample_one_no_sync(target_probs[:, -1]) # [B, 1]
-        # fill last token into draft model
+
         model_forward( #inputs should be x shape: torch.Size([1, 1]), input_pos: torch.Size([1])
             draft_model,
             draft_tokens[-1].view(1, -1),
-            orig_input_pos + speculate_k,
+            orig_input_pos + speculate_k, #remove model forward here
         )
-        return torch.cat([draft_tokens.view(-1), last_token[0].view(-1)], dim=0)
+        #return draft_tokens.view(-1)
+        return torch.cat([draft_tokens.view(-1), last_token.view(-1)], dim=0)
     else:
         accept_length = rejected_locations[0, 1].item() # [B]
+        """
         p = draft_probs[:, accept_length]
         q = target_probs[:, accept_length]
         new = q - p
         new = torch.where(new > 0, new, 0.0)
         new = new / new.sum()
         next_token = multinomial_sample_one_no_sync(new)
-        return torch.cat([draft_tokens[:accept_length].view(-1), next_token.view(-1)], dim=0)
+        """
+        last_token = multinomial_sample_one_no_sync(target_probs[:, accept_length])
+        return torch.cat([draft_tokens[:accept_length].view(-1), last_token.view(-1)], dim=0)
 
 def pad_vocab(model: Transformer, target_vocab_size: int):
     cur_vocab_size = model.output.weight.shape[0]
@@ -206,6 +288,7 @@ def generate(
     *,
     interactive: bool,
     draft_model: Transformer,
+    eos_id: int,
     speculate_k: Optional[int] = 8,
     callback = lambda x: x,
     **sampling_kwargs
@@ -240,9 +323,9 @@ def generate(
     input_pos = torch.arange(0, T, device=device)
     print(f"prefill x shape: {prompt.view(batch_size, -1).view(batch_size, -1).shape}, input_pos: {input_pos.shape}")
     print("devices", prompt.device, input_pos.device)
-    next_token = prefill(model, prompt.view(batch_size, -1), input_pos, **sampling_kwargs).clone()
     if is_speculative:
-        prefill(draft_model, prompt.view(batch_size, -1), input_pos, **sampling_kwargs)
+        next_token = prefill(draft_model, prompt.view(batch_size, -1), input_pos, **sampling_kwargs)
+    next_token, probs = prefill(model, prompt.view(batch_size, -1), input_pos, **sampling_kwargs)
     seq[:, T] = next_token.squeeze()
 
     input_pos = torch.tensor([T], device=device, dtype=torch.int)
@@ -253,7 +336,7 @@ def generate(
         while input_pos < T_new - 1:
             cur_token = next_token.view(())
             next_tokens = speculative_decode(
-                model, draft_model, cur_token, input_pos, speculate_k, **sampling_kwargs
+                model, draft_model, cur_token, input_pos, speculate_k, eos_id, **sampling_kwargs
             )
             accept_counts[len(next_tokens) - 1] += 1
             num_added = min(T_new - input_pos - 1, len(next_tokens))
@@ -262,13 +345,22 @@ def generate(
                 callback(i)
             input_pos = input_pos + num_added
             next_token = next_tokens[-1]
+            
+            # Check for EOS token to break early
+            if eos_id in next_tokens:
+                break
+        num_generated = input_pos - T
     else:
         print(f"x shape: {next_token.view(batch_size, -1).shape}, input_pos: {input_pos.shape}")
         generated_tokens, _ = decode_n_tokens(model, next_token.view(batch_size, -1), input_pos, max_new_tokens - 1, callback=callback, **sampling_kwargs)
-        seq[:, T + 1:] = torch.cat(generated_tokens, dim=-1)
-
+        if generated_tokens:
+            # Stack the generated tokens along the sequence dimension
+            generated_tensor = torch.cat(generated_tokens, dim=-1)  # [batch_size, num_tokens]
+            num_generated = generated_tensor.size(-1)
+            seq[:, T + 1:T + 1 + num_generated] = generated_tensor
+    seq = seq[:, :T + 1 + num_generated]
     generate_stats = {
-        'accept_counts': accept_counts
+        'accept_counts': accept_counts,
     }
     return seq, generate_stats
 
@@ -338,6 +430,7 @@ def main(
     max_new_tokens: int = 100,
     batch_size: int = 1,
     top_k: int = 200,
+    top_p: Optional[float] = None,
     temperature: float = 0.8,
     checkpoint_path: Path = Path("checkpoints/meta-Transformer/Transformer-2-7b-chat-hf/model.pth"),
     compile: bool = True,
@@ -384,18 +477,27 @@ def main(
     print(f"Time to load model: {time.time() - t0:.02f} seconds")
 
     tokenizer = get_tokenizer(tokenizer_path, checkpoint_path)
-
-
-    prompt = tokenizer.render_chat([
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": prompt}
-    ]) #fix this to be more robust
+    eos = tokenizer.eos_id()
 
     if isinstance(prompt, str):
-        encoded = encode_tokens(tokenizer, prompt, bos=True, device=device)
+        prompt = prompt.strip()
+        if prompt == "":
+            encoded = torch.randint(0, tokenizer.vocab_size, (8000,), device=device, dtype=torch.int64)
+        else:
+            if is_chat:
+                prompt = tokenizer.render_chat([
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": prompt}
+                ])
+            prompt = tokenizer.render_chat([
+                {"role": "system", "content": ""},
+                {"role": "user", "content": prompt}
+            ])
+            encoded = encode_tokens(tokenizer, prompt, bos=True, device=device)
+    elif isinstance(prompt, int):
+        encoded = torch.randint(0, tokenizer.vocab_size, (prompt,), device=device, dtype=torch.int64)
     else:
-        # generate a fully synthetic prompt
-        encoded = torch.randint(0, 1024, (prompt,), device=device, dtype=torch.int64)
+        raise ValueError("Prompt must be a string or an int")
     prompt_length = encoded.size(-1)
 
     torch.manual_seed(1234)
@@ -419,9 +521,9 @@ def main(
     aggregate_metrics = {
         'tokens_per_sec': [],
         'accept_counts': [],
+        'generated_tokens': [],
     }
     start = -1 if compile else 0
-
     for i in range(start, num_samples):
         device_sync(device=device) # MKG
         if i >= 0 and interactive:
@@ -464,10 +566,13 @@ def main(
                 speculate_k=speculate_k,
                 interactive=interactive,
                 callback=callback,
+                eos_id=eos,
                 temperature=temperature,
                 top_k=top_k,
+                top_p=top_p,
             )
-            aggregate_metrics['accept_counts'].append(metrics['accept_counts'])
+            if i != -1:
+                aggregate_metrics['accept_counts'].append(metrics['accept_counts'])
         if i == -1:
             print(f"Compilation time: {time.perf_counter() - t0:.2f} seconds")
             continue
@@ -483,12 +588,13 @@ def main(
             # Just displaying the first generation
             if batch_size > 1:
                 print("Only displaying the first generation of the batch")
-            print(tokenizer.decode(y[0].tolist()))
+            print(tokenizer.decode(y[0].tolist(), skip_special_tokens=False))
         else:
             print()
         tokens_generated = y.size(-1) - prompt_length
         generated_tokens_sec = tokens_generated / t
         aggregate_metrics['tokens_per_sec'].append(generated_tokens_sec)
+        aggregate_metrics['generated_tokens'].append(tokens_generated)
         print(f"Time for inference {i + 1}: {t:.02f} sec total, {generated_tokens_sec:.02f} tokens/sec")
         print(f"Bandwidth achieved: {model_size * generated_tokens_sec / 1e9:.02f} GB/s")
         total_tokens_sec = y.numel() / t
@@ -500,10 +606,11 @@ def main(
         acceptance_probs = [i/sum(counts_aggregated) for i in counts_aggregated]
         print(f"Acceptance probs: {acceptance_probs}")
         print(f"Mean Accepted: {sum([idx * i for idx, i in enumerate(counts_aggregated)])/sum(counts_aggregated)}")
+        print(f"counts_aggregated: {counts_aggregated}")
 
     print(f"Batch Size: {batch_size}")
     print(f"Prompt Length: {prompt_length}")
-    print(f"Generated tokens: {max_new_tokens}")
+    print(f"Generated tokens: {aggregate_metrics['generated_tokens']}")
     print(f"Average tokens/sec: {torch.mean(torch.tensor(aggregate_metrics['tokens_per_sec'])).item():.2f}")
     print(f"Memory used: {torch.cuda.max_memory_reserved() / 1e9:.02f} GB")
 
@@ -524,6 +631,7 @@ if __name__ == '__main__':
     parser.add_argument('--max_new_tokens', type=int, default=200, help='Maximum number of new tokens.')
     parser.add_argument('--batch_size', type=int, default=1, help='Batch size to benchmark with')
     parser.add_argument('--top_k', type=int, default=200, help='Top-k for sampling.')
+    parser.add_argument('--top_p', type=float, default=None, help='Top-p (nucleus) for sampling.')
     parser.add_argument('--temperature', type=float, default=0.8, help='Temperature for sampling.')
     parser.add_argument('--checkpoint_path', type=Path, default=Path("checkpoints/meta-Transformer/Transformer-2-7b-chat-hf/model.pth"), help='Model checkpoint path.')
     parser.add_argument('--compile', action='store_true', help='Whether to compile the model.')
@@ -535,7 +643,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     main(
-        args.prompt, args.interactive, args.num_samples, args.max_new_tokens, args.batch_size, args.top_k,
+        args.prompt, args.interactive, args.num_samples, args.max_new_tokens, args.batch_size, args.top_k, args.top_p,
         args.temperature, args.checkpoint_path, args.compile, args.compile_prefill, args.profile, args.draft_checkpoint_path,
         args.speculate_k, args.device
     )
