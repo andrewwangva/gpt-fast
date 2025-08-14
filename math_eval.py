@@ -133,7 +133,7 @@ def verify_tokens(p: torch.Tensor, q: torch.Tensor, target_probs: torch.Tensor) 
     entropy = -torch.sum(target_probs * torch.log(target_probs + 1e-10), dim=-1)
 
     # Conditions: accept if q > 0.2 and entropy < 0.75
-    accept_mask = (q > 0.2) & (entropy < 0.75)
+    accept_mask = ((q > 0.07) & (entropy < 0.72)) | ((q > 0.14) & (entropy >= 0.72))
     # Invert: reject if not accepted
     reject_mask = ~accept_mask
     rejected_locations = reject_mask.nonzero(as_tuple=False)
@@ -159,7 +159,7 @@ def speculative_decode(
         torch.cat([cur_token.view(1, 1), draft_tokens], dim=0).view(1, -1),
         torch.arange(input_pos, input_pos + speculate_k + 1, device=cur_token.device)
     )
-    target_probs = logits_to_probs(target_logits,  **sampling_kwargs)
+    target_probs = logits_to_probs(target_logits)
     draft_probs = torch.cat(draft_probs, dim=0).unsqueeze(0) #[B, L, 1]
     
     # q: target prob, p: draft prob
@@ -546,7 +546,7 @@ def main(
                 top_k=top_k,
                 eos_id=tokenizer.eos_id(),
                 batch_size=1,
-                expected_answer=item.get("answer", None),
+                expected_answer=item.get("expected_answer", None),
             )
             results.append(out)
             print(f"Problem {idx+1}/{len(problems)} done")
