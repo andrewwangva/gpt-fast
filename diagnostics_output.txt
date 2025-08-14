@@ -19,30 +19,31 @@ The expression $2\cdot 3 \cdot 4\cdot 5+1$ is equal to 121, since multiplication
 (2\cdot (3\cdot 4)) \cdot (5+1) = 144.
 \]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses). 
 
+
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 1.1537s
+   ⏱️  Draft generation: 1.1279s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0372s
+   ⏱️  Target verification: 0.0368s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   'Note':<13 0.3438   0.0153   0.0447   N/A      ❌ REJECT   D:3.1/T:3.5
-1   ' that':<13 0.6094   0.2891   0.4746   N/A      ❌ REJECT   D:0.8/T:0.7
-2   ' rearr':<13 0.4219   0.4648   1.0000   N/A      ❌ REJECT   D:2.5/T:2.6
-3   'anging':<13 0.9883   0.9531   0.9648   N/A      ❌ REJECT   D:0.1/T:0.2
-4   ' terms':<13 0.9531   0.9531   1.0000   N/A      ❌ REJECT   D:0.3/T:0.2
+0   'Note':<13 0.3633   0.0243   0.0669   N/A      ❌ REJECT   D:3.4/T:3.7
+1   ' that':<13 0.6641   0.1807   0.2715   N/A      ❌ REJECT   D:0.8/T:0.6
+2   ' problem':<13 0.0001   0.0001   1.0000   N/A      ❌ REJECT   D:2.8/T:3.0
+3   ' ':<13 0.3379   0.1191   0.3535   N/A      ❌ REJECT   D:3.1/T:2.5
+4   '2':<13 0.3652   0.3867   1.0000   N/A      ❌ REJECT   D:1.7/T:1.8
 
 ❌ REJECTION at position 0
-🔄 Correction: 'Note' → 'Okay'
+🔄 Correction: 'Note' → 'Alright'
 
 📊 SUMMARY:
    📝 Drafted: 5
    ✅ Accepted: 0
    📈 Acceptance rate: 0.0%
    ⚡ Tokens used: 1
-   🧠 Avg entropies - Draft: 1.37, Target: 1.45
+   🧠 Avg entropies - Draft: 2.34, Target: 2.31
 
 ================================================================================
 🔍 DIAGNOSTIC STEP 1 - Position 151
@@ -50,84 +51,20 @@ Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies
 🧩 PREFIX (len=152 tokens)
 The expression $2\cdot 3 \cdot 4\cdot 5+1$ is equal to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
 (2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).OkayOkay
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).AlrightAlright
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1190s
+   ⏱️  Draft generation: 0.1157s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0257s
+   ⏱️  Target verification: 0.0251s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
 0   ',':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   ' so':<13 0.9258   0.9531   1.0000   N/A      ✅ ACCEPT   D:0.3/T:0.2
-2   ' I':<13 0.9180   0.9648   1.0000   N/A      ✅ ACCEPT   D:0.4/T:0.2
-3   ' need':<13 0.3906   0.2891   0.7383   N/A      ❌ REJECT   D:1.4/T:1.2
-4   ' to':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
-
-❌ REJECTION at position 3
-🔄 Correction: ' need' → ' have'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 3
-   📈 Acceptance rate: 60.0%
-   ⚡ Tokens used: 4
-   🧠 Avg entropies - Draft: 0.43, Target: 0.32
-
-================================================================================
-🔍 DIAGNOSTIC STEP 2 - Position 155
-================================================================================
-🧩 PREFIX (len=156 tokens)
-The expression $2\cdot 3 \cdot 4\cdot 5+1$ is equal to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have have
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1179s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0255s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' this':<13 0.9688   0.9805   1.0000   N/A      ✅ ACCEPT   D:0.2/T:0.1
-1   ' math':<13 0.4551   0.3926   0.8633   N/A      ❌ REJECT   D:0.9/T:1.0
-2   ' problem':<13 0.9961   0.9844   0.9883   N/A      ❌ REJECT   D:0.0/T:0.1
-3   ' to':<13 0.0781   0.0371   0.4746   N/A      ❌ REJECT   D:1.0/T:0.9
-4   ' solve':<13 0.9688   0.9336   0.9648   N/A      ❌ REJECT   D:0.2/T:0.3
-
-❌ REJECTION at position 1
-🔄 Correction: ' math' → ' problem'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 1
-   📈 Acceptance rate: 20.0%
-   ⚡ Tokens used: 2
-   🧠 Avg entropies - Draft: 0.46, Target: 0.47
-
-================================================================================
-🔍 DIAGNOSTIC STEP 3 - Position 157
-================================================================================
-🧩 PREFIX (len=158 tokens)
-The expression $2\cdot 3 \cdot 4\cdot 5+1$ is equal to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem problem
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1177s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' here':<13 0.3906   0.3516   0.8984   N/A      ✅ ACCEPT   D:1.1/T:0.9
-1   ':':<13 0.2061   0.1875   0.9102   N/A      ✅ ACCEPT   D:1.5/T:1.3
-2   ' I':<13 0.8828   0.7656   0.8672   N/A      ✅ ACCEPT   D:0.6/T:0.9
-3   ' need':<13 0.9688   0.9023   0.9297   N/A      ✅ ACCEPT   D:0.2/T:0.4
+1   ' so':<13 0.7852   0.8906   1.0000   N/A      ✅ ACCEPT   D:0.7/T:0.4
+2   ' I':<13 0.7969   0.9648   1.0000   N/A      ✅ ACCEPT   D:0.9/T:0.2
+3   ' need':<13 0.3848   0.2197   0.5703   N/A      ✅ ACCEPT   D:1.7/T:1.4
 4   ' to':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 
 🎉 ALL TOKENS ACCEPTED! Final token: ' figure'
@@ -137,29 +74,29 @@ Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies
    ✅ Accepted: 5
    📈 Acceptance rate: 100.0%
    ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.66, Target: 0.74
+   🧠 Avg entropies - Draft: 0.65, Target: 0.39
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 4 - Position 163
+🔍 DIAGNOSTIC STEP 2 - Position 157
 ================================================================================
-🧩 PREFIX (len=164 tokens)
+🧩 PREFIX (len=158 tokens)
 The expression $2\cdot 3 \cdot 4\cdot 5+1$ is equal to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
 (2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure figure
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure figure
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1188s
+   ⏱️  Draft generation: 0.1151s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0261s
+   ⏱️  Target verification: 0.0249s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
 0   ' out':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   ' how':<13 0.9961   0.9961   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   ' many':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-3   ' different':<13 0.9180   0.9219   1.0000   N/A      ✅ ACCEPT   D:0.3/T:0.3
-4   ' values':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+1   ' how':<13 0.8594   0.9023   1.0000   N/A      ✅ ACCEPT   D:0.4/T:0.3
+2   ' many':<13 1.0000   0.9961   0.9961   N/A      ✅ ACCEPT   D:0.0/T:0.0
+3   ' different':<13 0.6875   0.8750   1.0000   N/A      ✅ ACCEPT   D:0.7/T:0.4
+4   ' values':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 
 🎉 ALL TOKENS ACCEPTED! Final token: ' I'
 
@@ -168,89 +105,155 @@ Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies
    ✅ Accepted: 5
    📈 Acceptance rate: 100.0%
    ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.07, Target: 0.06
+   🧠 Avg entropies - Draft: 0.24, Target: 0.15
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 5 - Position 169
+🔍 DIAGNOSTIC STEP 3 - Position 163
 ================================================================================
-🧩 PREFIX (len=170 tokens)
+🧩 PREFIX (len=164 tokens)
 The expression $2\cdot 3 \cdot 4\cdot 5+1$ is equal to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
 (2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I I
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I I
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1182s
+   ⏱️  Draft generation: 0.1148s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0254s
+   ⏱️  Target verification: 0.0246s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
 0   ' can':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   ' get':<13 0.9922   0.9961   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   ' from':<13 0.5898   0.9766   1.0000   N/A      ✅ ACCEPT   D:0.7/T:0.1
-3   ' the':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   ' expression':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+1   ' get':<13 0.9844   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.0
+2   ' by':<13 0.4375   0.3203   0.7305   N/A      ✅ ACCEPT   D:0.7/T:0.6
+3   ' inserting':<13 0.9805   0.7266   0.7422   N/A      ❌ REJECT   D:0.1/T:0.8
+4   ' parentheses':<13 1.0000   0.9961   0.9961   N/A      ❌ REJECT   D:0.0/T:0.0
 
-🎉 ALL TOKENS ACCEPTED! Final token: ' \('
+❌ REJECTION at position 3
+🔄 Correction: ' inserting' → ' strategically'
 
 📊 SUMMARY:
    📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.15, Target: 0.03
+   ✅ Accepted: 3
+   📈 Acceptance rate: 60.0%
+   ⚡ Tokens used: 4
+   🧠 Avg entropies - Draft: 0.18, Target: 0.30
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 6 - Position 175
+🔍 DIAGNOSTIC STEP 4 - Position 167
+================================================================================
+🧩 PREFIX (len=168 tokens)
+ion $2\cdot 3 \cdot 4\cdot 5+1$ is equal to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically strategically
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1147s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' inserting':<13 0.7461   0.4375   0.5859   N/A      ✅ ACCEPT   D:0.7/T:1.0
+1   ' parentheses':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   ' into':<13 0.7969   0.9570   1.0000   N/A      ✅ ACCEPT   D:0.5/T:0.2
+3   ' this':<13 0.0374   0.0159   0.4258   N/A      ❌ REJECT   D:0.2/T:0.1
+4   ' expression':<13 0.9961   0.9219   0.9258   N/A      ❌ REJECT   D:0.0/T:0.3
+
+❌ REJECTION at position 3
+🔄 Correction: ' this' → ' the'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 3
+   📈 Acceptance rate: 60.0%
+   ⚡ Tokens used: 4
+   🧠 Avg entropies - Draft: 0.29, Target: 0.32
+
+================================================================================
+🔍 DIAGNOSTIC STEP 5 - Position 171
+================================================================================
+🧩 PREFIX (len=172 tokens)
+\cdot 5+1$ is equal to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the the
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1147s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0246s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' expression':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+1   ' ':<13 0.4473   0.2910   0.6523   N/A      ❌ REJECT   D:1.1/T:0.7
+2   '2':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
+3   '·':<13 0.6016   0.8086   1.0000   N/A      ❌ REJECT   D:1.3/T:0.9
+4   '3':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
+
+❌ REJECTION at position 1
+🔄 Correction: ' ' → ' \('
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 1
+   📈 Acceptance rate: 20.0%
+   ⚡ Tokens used: 2
+   🧠 Avg entropies - Draft: 0.49, Target: 0.31
+
+================================================================================
+🔍 DIAGNOSTIC STEP 6 - Position 173
+================================================================================
+🧩 PREFIX (len=174 tokens)
+ equal to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \( \(
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1144s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0246s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   '2':<13 0.9766   0.9805   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.1
+1   '\':<13 0.0204   0.0110   0.5391   N/A      ❌ REJECT   D:0.1/T:0.1
+2   'cdot':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
+3   ' ':<13 0.9414   0.9805   1.0000   N/A      ❌ REJECT   D:0.2/T:0.1
+4   '3':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
+
+❌ REJECTION at position 1
+🔄 Correction: '\' → ' \'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 1
+   📈 Acceptance rate: 20.0%
+   ⚡ Tokens used: 2
+   🧠 Avg entropies - Draft: 0.09, Target: 0.05
+
+================================================================================
+🔍 DIAGNOSTIC STEP 7 - Position 175
 ================================================================================
 🧩 PREFIX (len=176 tokens)
-t 4\cdot 5+1$ is equal to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
+qual to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
 (2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \( \(
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \ \
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1188s
+   ⏱️  Draft generation: 0.1144s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0254s
+   ⏱️  Target verification: 0.0245s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   '2':<13 0.9844   0.9922   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.0
-1   ' \':<13 0.9844   0.9922   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.0
-2   'cdot':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-3   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   '3':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-
-🎉 ALL TOKENS ACCEPTED! Final token: ' \'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.04, Target: 0.02
-
-================================================================================
-🔍 DIAGNOSTIC STEP 7 - Position 181
-================================================================================
-🧩 PREFIX (len=182 tokens)
-+1$ is equal to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \ \
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1185s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   'cdot':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+0   'cdot':<13 0.9766   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.0
 1   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   '4':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   '3':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 3   ' \':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 4   'cdot':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 
@@ -261,311 +264,27 @@ Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies
    ✅ Accepted: 5
    📈 Acceptance rate: 100.0%
    ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.00, Target: 0.00
+   🧠 Avg entropies - Draft: 0.02, Target: 0.00
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 8 - Position 187
+🔍 DIAGNOSTIC STEP 8 - Position 181
 ================================================================================
-🧩 PREFIX (len=188 tokens)
- to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
+🧩 PREFIX (len=182 tokens)
+ since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
 (2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot  
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot  
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1173s
+   ⏱️  Draft generation: 0.1140s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   '5':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   ' +':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-3   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   '\)':<13 1.0000   0.9961   0.9961   N/A      ✅ ACCEPT   D:0.0/T:0.0
-
-🎉 ALL TOKENS ACCEPTED! Final token: ' by'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.00, Target: 0.00
-
-================================================================================
-🔍 DIAGNOSTIC STEP 9 - Position 193
-================================================================================
-🧩 PREFIX (len=194 tokens)
-ce multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by by
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1178s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' inserting':<13 0.9922   0.3418   0.3438   N/A      ✅ ACCEPT   D:0.1/T:0.8
-1   ' parentheses':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   '.':<13 0.9453   0.3730   0.3945   N/A      ❌ REJECT   D:0.3/T:0.7
-3   ' The':<13 0.4512   0.3613   0.8008   N/A      ❌ REJECT   D:2.1/T:1.7
-4   ' key':<13 0.1235   0.0649   0.5273   N/A      ❌ REJECT   D:2.2/T:2.0
-
-❌ REJECTION at position 2
-🔄 Correction: '.' → ' in'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 2
-   📈 Acceptance rate: 40.0%
-   ⚡ Tokens used: 3
-   🧠 Avg entropies - Draft: 0.92, Target: 1.03
-
-================================================================================
-🔍 DIAGNOSTIC STEP 10 - Position 196
-================================================================================
-🧩 PREFIX (len=197 tokens)
-ied out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in in
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1177s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0250s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' different':<13 0.9141   0.9570   1.0000   N/A      ✅ ACCEPT   D:0.5/T:0.2
-1   ' ways':<13 0.5898   0.9062   1.0000   N/A      ✅ ACCEPT   D:0.7/T:0.3
-2   '.':<13 0.9922   0.9922   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.1
-3   ' Each':<13 0.0198   0.0001   0.0044   N/A      ❌ REJECT   D:2.1/T:1.5
-4   ' time':<13 0.4336   0.6094   1.0000   N/A      ❌ REJECT   D:1.8/T:1.4
-
-❌ REJECTION at position 3
-🔄 Correction: ' Each' → ' I'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 3
-   📈 Acceptance rate: 60.0%
-   ⚡ Tokens used: 4
-   🧠 Avg entropies - Draft: 1.01, Target: 0.69
-
-================================================================================
-🔍 DIAGNOSTIC STEP 11 - Position 200
-================================================================================
-🧩 PREFIX (len=201 tokens)
-dition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I I
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1173s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0252s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' know':<13 0.4629   0.7773   1.0000   N/A      ✅ ACCEPT   D:1.3/T:0.7
-1   ' the':<13 0.0150   0.0032   0.2109   N/A      ❌ REJECT   D:0.4/T:0.1
-2   ' original':<13 0.1689   0.0889   0.5273   N/A      ❌ REJECT   D:2.5/T:1.8
-3   ' expression':<13 0.5820   0.9102   1.0000   N/A      ❌ REJECT   D:0.8/T:0.4
-4   ' without':<13 0.2344   0.3555   1.0000   N/A      ❌ REJECT   D:1.7/T:1.6
-
-❌ REJECTION at position 1
-🔄 Correction: ' the' → ' that'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 1
-   📈 Acceptance rate: 20.0%
-   ⚡ Tokens used: 2
-   🧠 Avg entropies - Draft: 1.33, Target: 0.91
-
-================================================================================
-🔍 DIAGNOSTIC STEP 12 - Position 202
-================================================================================
-🧩 PREFIX (len=203 tokens)
-er, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that that
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1173s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' multiplication':<13 0.1719   0.0033   0.0190   N/A      ❌ REJECT   D:2.2/T:1.0
-1   ' is':<13 0.6289   0.9688   1.0000   N/A      ❌ REJECT   D:1.2/T:0.2
-2   ' performed':<13 0.0723   0.0032   0.0437   N/A      ❌ REJECT   D:0.9/T:1.5
-3   ' before':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
-4   ' addition':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
-
-❌ REJECTION at position 0
-🔄 Correction: ' multiplication' → ' normally'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 0
-   📈 Acceptance rate: 0.0%
-   ⚡ Tokens used: 1
-   🧠 Avg entropies - Draft: 0.87, Target: 0.56
-
-================================================================================
-🔍 DIAGNOSTIC STEP 13 - Position 203
-================================================================================
-🧩 PREFIX (len=204 tokens)
-tain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally normally
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1176s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ',':<13 0.8477   0.9922   1.0000   N/A      ✅ ACCEPT   D:0.5/T:0.0
-1   ' without':<13 0.9180   0.8438   0.9180   N/A      ✅ ACCEPT   D:0.4/T:0.7
-2   ' parentheses':<13 0.3438   0.1836   0.5352   N/A      ✅ ACCEPT   D:0.7/T:1.1
-3   ',':<13 1.0000   0.9844   0.9844   N/A      ✅ ACCEPT   D:0.0/T:0.1
-4   ' we':<13 0.3008   0.0781   0.2598   N/A      ❌ REJECT   D:1.3/T:1.2
-
-❌ REJECTION at position 4
-🔄 Correction: ' we' → ' multiplication'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 4
-   📈 Acceptance rate: 80.0%
-   ⚡ Tokens used: 5
-   🧠 Avg entropies - Draft: 0.60, Target: 0.63
-
-================================================================================
-🔍 DIAGNOSTIC STEP 14 - Position 208
-================================================================================
-🧩 PREFIX (len=209 tokens)
-ion if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication multiplication
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1171s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0252s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' is':<13 0.8242   0.7305   0.8867   N/A      ✅ ACCEPT   D:0.5/T:0.7
-1   ' done':<13 0.9883   0.9492   0.9609   N/A      ✅ ACCEPT   D:0.1/T:0.2
-2   ' before':<13 0.8672   0.8633   0.9961   N/A      ✅ ACCEPT   D:0.4/T:0.5
-3   ' addition':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   ',':<13 0.9375   0.9883   1.0000   N/A      ✅ ACCEPT   D:0.3/T:0.1
-
-🎉 ALL TOKENS ACCEPTED! Final token: ' so'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.26, Target: 0.30
-
-================================================================================
-🔍 DIAGNOSTIC STEP 15 - Position 214
-================================================================================
-🧩 PREFIX (len=215 tokens)
-lowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so so
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1179s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' the':<13 0.2432   0.1328   0.5469   N/A      ✅ ACCEPT   D:1.8/T:0.9
-1   ' expression':<13 0.5391   0.8047   1.0000   N/A      ✅ ACCEPT   D:1.2/T:0.6
-2   ' is':<13 0.5430   0.3477   0.6406   N/A      ✅ ACCEPT   D:1.4/T:1.6
-3   ' \(':<13 0.4316   0.0447   0.1035   N/A      ✅ ACCEPT   D:1.5/T:0.5
-4   '2':<13 0.9609   0.2676   0.2793   N/A      ✅ ACCEPT   D:0.2/T:0.6
-
-🎉 ALL TOKENS ACCEPTED! Final token: ' \'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 1.20, Target: 0.83
-
-================================================================================
-🔍 DIAGNOSTIC STEP 16 - Position 220
-================================================================================
-🧩 PREFIX (len=221 tokens)
-nserting parentheses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \ \
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1175s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0255s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   'times':<13 0.5000   0.3770   0.7539   N/A      ✅ ACCEPT   D:0.7/T:0.7
-1   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   '3':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-3   ' \':<13 0.9531   0.9922   1.0000   N/A      ✅ ACCEPT   D:0.2/T:0.0
-4   'times':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-
-🎉 ALL TOKENS ACCEPTED! Final token: ' '
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.18, Target: 0.14
-
-================================================================================
-🔍 DIAGNOSTIC STEP 17 - Position 226
-================================================================================
-🧩 PREFIX (len=227 tokens)
-theses. For example, we can obtain 144 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times  
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1185s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0254s
+   ⏱️  Target verification: 0.0249s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
 0   '4':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 1   ' \':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   'times':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   'cdot':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 3   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 4   '5':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 
@@ -579,150 +298,847 @@ Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies
    🧠 Avg entropies - Draft: 0.00, Target: 0.00
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 18 - Position 232
+🔍 DIAGNOSTIC STEP 9 - Position 187
 ================================================================================
-🧩 PREFIX (len=233 tokens)
-xample, we can obtain 144 by writing \[
+🧩 PREFIX (len=188 tokens)
+plication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
 (2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + +
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + +
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1175s
+   ⏱️  Draft generation: 0.1148s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
+   ⏱️  Target verification: 0.0244s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
 0   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 1   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   '\':<13 0.7852   0.6875   0.8750   N/A      ✅ ACCEPT   D:0.6/T:0.7
-3   '),':<13 0.7773   0.7305   0.9414   N/A      ✅ ACCEPT   D:0.5/T:0.6
-4   ' which':<13 0.9883   0.9883   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.1
+2   '\':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+3   ').':<13 0.9922   0.9961   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.0
+4   ' The':<13 0.5039   0.4590   0.9102   N/A      ✅ ACCEPT   D:2.2/T:1.6
 
-🎉 ALL TOKENS ACCEPTED! Final token: ' equals'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.24, Target: 0.28
-
-================================================================================
-🔍 DIAGNOSTIC STEP 19 - Position 238
-================================================================================
-🧩 PREFIX (len=239 tokens)
-44 by writing \[
-(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals equals
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1172s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' ':<13 0.7031   0.8320   1.0000   N/A      ✅ ACCEPT   D:0.6/T:0.5
-1   '1':<13 0.9609   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.2/T:0.0
-2   '2':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-3   '1':<13 0.6797   0.1641   0.2412   N/A      ✅ ACCEPT   D:0.6/T:0.4
-4   ',':<13 0.0168   0.0182   1.0000   N/A      ✅ ACCEPT   D:0.4/T:0.5
-
-🎉 ALL TOKENS ACCEPTED! Final token: ' because'
+🎉 ALL TOKENS ACCEPTED! Final token: ' key'
 
 📊 SUMMARY:
    📝 Drafted: 5
    ✅ Accepted: 5
    📈 Acceptance rate: 100.0%
    ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.38, Target: 0.29
+   🧠 Avg entropies - Draft: 0.45, Target: 0.32
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 20 - Position 244
+🔍 DIAGNOSTIC STEP 10 - Position 193
 ================================================================================
-🧩 PREFIX (len=245 tokens)
-\[
+🧩 PREFIX (len=194 tokens)
+rried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
 (2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because because
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key key
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1179s
+   ⏱️  Draft generation: 0.1144s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0251s
+   ⏱️  Target verification: 0.0247s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   ' we':<13 0.0767   0.0027   0.0356   N/A      ❌ REJECT   D:2.1/T:1.5
-1   ' do':<13 0.4082   0.2930   0.7188   N/A      ❌ REJECT   D:1.8/T:1.7
-2   ' all':<13 0.4844   0.4805   0.9922   N/A      ❌ REJECT   D:1.1/T:0.9
-3   ' the':<13 0.9531   0.9922   1.0000   N/A      ❌ REJECT   D:0.2/T:0.1
-4   ' multip':<13 0.9844   0.9883   1.0000   N/A      ❌ REJECT   D:0.1/T:0.1
+0   ' here':<13 0.7617   0.7461   0.9805   N/A      ✅ ACCEPT   D:0.8/T:0.9
+1   ' is':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   ' that':<13 0.8867   0.9961   1.0000   N/A      ✅ ACCEPT   D:0.5/T:0.0
+3   ' I':<13 0.2871   0.5078   1.0000   N/A      ✅ ACCEPT   D:2.2/T:1.1
+4   ' can':<13 0.9570   0.9844   1.0000   N/A      ✅ ACCEPT   D:0.2/T:0.1
 
-❌ REJECTION at position 0
-🔄 Correction: ' we' → ' \('
+🎉 ALL TOKENS ACCEPTED! Final token: ' only'
 
 📊 SUMMARY:
    📝 Drafted: 5
-   ✅ Accepted: 0
-   📈 Acceptance rate: 0.0%
-   ⚡ Tokens used: 1
-   🧠 Avg entropies - Draft: 1.07, Target: 0.85
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.77, Target: 0.42
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 21 - Position 245
+🔍 DIAGNOSTIC STEP 11 - Position 199
 ================================================================================
-🧩 PREFIX (len=246 tokens)
-g \[
+🧩 PREFIX (len=200 tokens)
+. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
 (2\cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \( \(
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only only
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1172s
+   ⏱️  Draft generation: 0.1147s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
+   ⏱️  Target verification: 0.0246s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   '2':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   ' \':<13 0.9922   0.9844   0.9922   N/A      ✅ ACCEPT   D:0.1/T:0.1
-2   'times':<13 0.9961   0.9141   0.9180   N/A      ❌ REJECT   D:0.0/T:0.3
-3   ' ':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
-4   '3':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
+0   ' change':<13 0.2773   0.3262   1.0000   N/A      ✅ ACCEPT   D:1.8/T:0.9
+1   ' the':<13 0.9844   0.9883   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.1
+2   ' expression':<13 0.7930   0.0063   0.0079   N/A      ❌ REJECT   D:0.8/T:0.3
+3   ' by':<13 0.9531   1.0000   1.0000   N/A      ❌ REJECT   D:0.3/T:0.0
+4   ' placing':<13 0.0186   0.0045   0.2451   N/A      ❌ REJECT   D:1.2/T:0.8
 
 ❌ REJECTION at position 2
-🔄 Correction: 'times' → 'cdot'
+🔄 Correction: ' expression' → ' order'
 
 📊 SUMMARY:
    📝 Drafted: 5
    ✅ Accepted: 2
    📈 Acceptance rate: 40.0%
    ⚡ Tokens used: 3
-   🧠 Avg entropies - Draft: 0.02, Target: 0.08
+   🧠 Avg entropies - Draft: 0.84, Target: 0.41
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 22 - Position 248
+🔍 DIAGNOSTIC STEP 12 - Position 202
 ================================================================================
-🧩 PREFIX (len=249 tokens)
-cdot (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdotcdot
+🧩 PREFIX (len=203 tokens)
+obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order order
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1177s
+   ⏱️  Draft generation: 0.1145s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0251s
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' of':<13 0.7734   0.9336   1.0000   N/A      ✅ ACCEPT   D:0.8/T:0.3
+1   ' operations':<13 0.9922   0.9922   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.1
+2   ' by':<13 0.8789   0.9922   1.0000   N/A      ✅ ACCEPT   D:0.6/T:0.1
+3   ' adding':<13 0.4961   0.8242   1.0000   N/A      ✅ ACCEPT   D:1.5/T:0.5
+4   ' parentheses':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+
+🎉 ALL TOKENS ACCEPTED! Final token: ','
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.61, Target: 0.18
+
+================================================================================
+🔍 DIAGNOSTIC STEP 13 - Position 208
+================================================================================
+🧩 PREFIX (len=209 tokens)
+ this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses,,
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1143s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' which':<13 0.0947   0.0031   0.0325   N/A      ❌ REJECT   D:1.5/T:0.9
+1   ' in':<13 0.0200   0.0001   0.0059   N/A      ❌ REJECT   D:2.3/T:2.1
+2   ' turn':<13 0.9492   0.2715   0.2852   N/A      ❌ REJECT   D:0.3/T:1.8
+3   ' affects':<13 0.3711   0.2207   0.5938   N/A      ❌ REJECT   D:1.8/T:1.1
+4   ' how':<13 0.4160   0.1729   0.4160   N/A      ❌ REJECT   D:0.9/T:1.3
+
+❌ REJECTION at position 0
+🔄 Correction: ' which' → ' not'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 1.36, Target: 1.45
+
+================================================================================
+🔍 DIAGNOSTIC STEP 14 - Position 209
+================================================================================
+🧩 PREFIX (len=210 tokens)
+xpression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not not
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1146s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0246s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' moving':<13 0.3066   0.0041   0.0134   N/A      ❌ REJECT   D:1.5/T:0.6
+1   ' numbers':<13 0.7812   0.0064   0.0082   N/A      ❌ REJECT   D:0.6/T:0.7
+2   ' or':<13 0.0845   0.0259   0.3066   N/A      ❌ REJECT   D:0.3/T:0.1
+3   ' changing':<13 0.2969   0.2676   0.9023   N/A      ❌ REJECT   D:2.3/T:1.6
+4   ' their':<13 0.4512   0.7578   1.0000   N/A      ❌ REJECT   D:1.7/T:0.7
+
+❌ REJECTION at position 0
+🔄 Correction: ' moving' → ' rearr'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 1.29, Target: 0.75
+
+================================================================================
+🔍 DIAGNOSTIC STEP 15 - Position 210
+================================================================================
+🧩 PREFIX (len=211 tokens)
+n if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearr rearr
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1145s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   'anging':<13 0.9727   0.8672   0.8906   N/A      ✅ ACCEPT   D:0.1/T:0.4
+1   ' the':<13 0.8203   0.9805   1.0000   N/A      ✅ ACCEPT   D:0.6/T:0.1
+2   ' numbers':<13 0.6172   0.6172   1.0000   N/A      ✅ ACCEPT   D:0.7/T:0.7
+3   ' or':<13 0.3789   0.5430   1.0000   N/A      ✅ ACCEPT   D:1.4/T:1.0
+4   ' how':<13 0.0002   0.0000   0.0001   N/A      ❌ REJECT   D:2.0/T:1.1
+
+❌ REJECTION at position 4
+🔄 Correction: ' how' → ' changing'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 4
+   📈 Acceptance rate: 80.0%
+   ⚡ Tokens used: 5
+   🧠 Avg entropies - Draft: 0.97, Target: 0.66
+
+================================================================================
+🔍 DIAGNOSTIC STEP 16 - Position 215
+================================================================================
+🧩 PREFIX (len=216 tokens)
+by inserting parentheses. For example, we can obtain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing changing
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1140s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0244s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' their':<13 0.4688   0.1816   0.3867   N/A      ❌ REJECT   D:1.4/T:0.5
+1   ' order':<13 0.4375   0.9531   1.0000   N/A      ❌ REJECT   D:1.7/T:0.3
+2   '.':<13 0.8867   0.8672   0.9766   N/A      ❌ REJECT   D:0.6/T:0.5
+3   ' So':<13 0.5391   0.2354   0.4375   N/A      ❌ REJECT   D:2.0/T:1.8
+4   ',':<13 0.7266   0.7422   1.0000   N/A      ❌ REJECT   D:1.3/T:1.1
+
+❌ REJECTION at position 0
+🔄 Correction: ' their' → ' the'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 1.38, Target: 0.83
+
+================================================================================
+🔍 DIAGNOSTIC STEP 17 - Position 216
+================================================================================
+🧩 PREFIX (len=217 tokens)
+ by inserting parentheses. For example, we can obtain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the the
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1146s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0246s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' operations':<13 0.4180   0.9062   1.0000   N/A      ✅ ACCEPT   D:1.7/T:0.4
+1   ' themselves':<13 0.7188   0.9453   1.0000   N/A      ✅ ACCEPT   D:1.0/T:0.3
+2   '.':<13 0.8438   0.7227   0.8555   N/A      ✅ ACCEPT   D:0.6/T:0.7
+3   ' Also':<13 0.1191   0.1426   1.0000   N/A      ✅ ACCEPT   D:2.3/T:1.7
+4   ',':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+
+🎉 ALL TOKENS ACCEPTED! Final token: ' parentheses'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 1.12, Target: 0.61
+
+================================================================================
+🔍 DIAGNOSTIC STEP 18 - Position 222
+================================================================================
+🧩 PREFIX (len=223 tokens)
+tain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses parentheses
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1144s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0244s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' don':<13 0.0327   0.0151   0.4629   N/A      ❌ REJECT   D:1.8/T:0.9
+1   ''t':<13 0.9805   0.9414   0.9609   N/A      ❌ REJECT   D:0.1/T:0.2
+2   ' mean':<13 0.0134   0.0001   0.0109   N/A      ❌ REJECT   D:2.7/T:2.0
+3   ' doing':<13 0.0055   0.0005   0.0898   N/A      ❌ REJECT   D:2.5/T:2.0
+4   ' the':<13 0.2266   0.1367   0.6016   N/A      ❌ REJECT   D:2.5/T:2.5
+
+❌ REJECTION at position 0
+🔄 Correction: ' don' → ' can'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 1.92, Target: 1.52
+
+================================================================================
+🔍 DIAGNOSTIC STEP 19 - Position 223
+================================================================================
+🧩 PREFIX (len=224 tokens)
+n obtain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can can
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1140s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' group':<13 0.1816   0.0339   0.1865   N/A      ❌ REJECT   D:2.1/T:1.7
+1   ' part':<13 0.0022   0.0000   0.0047   N/A      ❌ REJECT   D:2.6/T:1.4
+2   ' of':<13 0.9688   1.0000   1.0000   N/A      ❌ REJECT   D:0.1/T:0.0
+3   ' an':<13 0.0330   0.0067   0.2031   N/A      ❌ REJECT   D:0.2/T:0.0
+4   ' expression':<13 0.9531   0.9531   1.0000   N/A      ❌ REJECT   D:0.2/T:0.2
+
+❌ REJECTION at position 0
+🔄 Correction: ' group' → ''t'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 1.06, Target: 0.66
+
+================================================================================
+🔍 DIAGNOSTIC STEP 20 - Position 224
+================================================================================
+🧩 PREFIX (len=225 tokens)
+n obtain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't't
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1143s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' make':<13 0.0236   0.0019   0.0806   N/A      ❌ REJECT   D:1.3/T:0.7
+1   ' the':<13 0.6094   0.4570   0.7500   N/A      ❌ REJECT   D:2.0/T:2.2
+2   ' expression':<13 0.4023   0.3516   0.8750   N/A      ❌ REJECT   D:1.9/T:2.0
+3   ' evaluate':<13 0.1875   0.0067   0.0359   N/A      ❌ REJECT   D:3.5/T:2.0
+4   ' in':<13 0.3223   0.2393   0.7422   N/A      ❌ REJECT   D:2.6/T:2.3
+
+❌ REJECTION at position 0
+🔄 Correction: ' make' → ' be'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 2.24, Target: 1.84
+
+================================================================================
+🔍 DIAGNOSTIC STEP 21 - Position 225
+================================================================================
+🧩 PREFIX (len=226 tokens)
+tain 144 by writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be be
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1140s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0248s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' nested':<13 0.0515   0.0505   0.9805   N/A      ✅ ACCEPT   D:2.2/T:1.8
+1   ' in':<13 0.1279   0.6289   1.0000   N/A      ✅ ACCEPT   D:2.4/T:1.6
+2   ' the':<13 0.1021   0.0012   0.0121   N/A      ❌ REJECT   D:2.0/T:0.9
+3   ' process':<13 0.0004   0.0000   0.0334   N/A      ❌ REJECT   D:2.6/T:0.9
+4   ',':<13 0.4570   0.2178   0.4766   N/A      ❌ REJECT   D:1.9/T:2.6
+
+❌ REJECTION at position 2
+🔄 Correction: ' the' → ' a'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 2
+   📈 Acceptance rate: 40.0%
+   ⚡ Tokens used: 3
+   🧠 Avg entropies - Draft: 2.23, Target: 1.55
+
+================================================================================
+🔍 DIAGNOSTIC STEP 22 - Position 228
+================================================================================
+🧩 PREFIX (len=229 tokens)
+ writing \[
+(2\cdot (3\cdot 4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a a
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1149s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0246s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' way':<13 0.8984   0.9883   1.0000   N/A      ✅ ACCEPT   D:0.6/T:0.1
+1   ' that':<13 0.9844   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.0
+2   ' would':<13 0.5547   0.1533   0.2773   N/A      ✅ ACCEPT   D:2.1/T:2.5
+3   ' allow':<13 0.0486   0.1270   1.0000   N/A      ✅ ACCEPT   D:2.9/T:2.7
+4   ' me':<13 0.2227   0.3535   1.0000   N/A      ✅ ACCEPT   D:2.5/T:1.9
+
+🎉 ALL TOKENS ACCEPTED! Final token: ' to'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 1.65, Target: 1.45
+
+================================================================================
+🔍 DIAGNOSTIC STEP 23 - Position 234
+================================================================================
+🧩 PREFIX (len=235 tokens)
+4)) \cdot (5+1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to to
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1145s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0246s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' change':<13 0.2285   0.2812   1.0000   N/A      ✅ ACCEPT   D:3.3/T:1.9
+1   ' multiple':<13 0.1797   0.0000   0.0000   N/A      ❌ REJECT   D:1.6/T:0.1
+2   ' operations':<13 0.8711   0.7500   0.8594   N/A      ❌ REJECT   D:0.8/T:1.3
+3   ' at':<13 0.7930   0.1904   0.2402   N/A      ❌ REJECT   D:1.0/T:2.3
+4   ' once':<13 0.9375   0.8086   0.8633   N/A      ❌ REJECT   D:0.2/T:0.5
+
+❌ REJECTION at position 1
+🔄 Correction: ' multiple' → ' the'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 1
+   📈 Acceptance rate: 20.0%
+   ⚡ Tokens used: 2
+   🧠 Avg entropies - Draft: 1.40, Target: 1.24
+
+================================================================================
+🔍 DIAGNOSTIC STEP 24 - Position 236
+================================================================================
+🧩 PREFIX (len=237 tokens)
++1) = 144.
+\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the the
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1147s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0246s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' order':<13 0.7188   0.8008   1.0000   N/A      ✅ ACCEPT   D:1.5/T:1.0
+1   ' beyond':<13 0.3359   0.1138   0.3379   N/A      ✅ ACCEPT   D:2.2/T:0.7
+2   ' multiplication':<13 0.0181   0.0106   0.5859   N/A      ❌ REJECT   D:2.2/T:1.6
+3   ' and':<13 0.6914   0.9570   1.0000   N/A      ❌ REJECT   D:1.3/T:0.2
+4   ' addition':<13 0.9844   0.9766   0.9922   N/A      ❌ REJECT   D:0.1/T:0.1
+
+❌ REJECTION at position 2
+🔄 Correction: ' multiplication' → ' what'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 2
+   📈 Acceptance rate: 40.0%
+   ⚡ Tokens used: 3
+   🧠 Avg entropies - Draft: 1.45, Target: 0.73
+
+================================================================================
+🔍 DIAGNOSTIC STEP 25 - Position 239
+================================================================================
+🧩 PREFIX (len=240 tokens)
+al, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what what
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1143s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0244s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' parentheses':<13 0.0796   0.0024   0.0306   N/A      ❌ REJECT   D:1.7/T:1.7
+1   ' allow':<13 0.0498   0.0168   0.3379   N/A      ❌ REJECT   D:2.0/T:2.1
+2   ',':<13 0.3223   0.1729   0.5352   N/A      ❌ REJECT   D:1.7/T:2.2
+3   ' I':<13 0.1602   0.0259   0.1611   N/A      ❌ REJECT   D:2.1/T:1.5
+4   ' think':<13 0.8438   0.8555   1.0000   N/A      ❌ REJECT   D:0.7/T:0.6
+
+❌ REJECTION at position 0
+🔄 Correction: ' parentheses' → ' multiplication'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 1.64, Target: 1.62
+
+================================================================================
+🔍 DIAGNOSTIC STEP 26 - Position 240
+================================================================================
+🧩 PREFIX (len=241 tokens)
+e obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication multiplication
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1153s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' and':<13 0.7891   0.7383   0.9375   N/A      ❌ REJECT   D:1.1/T:1.3
+1   ' addition':<13 0.9922   0.9961   1.0000   N/A      ❌ REJECT   D:0.1/T:0.0
+2   ' can':<13 0.4629   0.0293   0.0635   N/A      ❌ REJECT   D:2.0/T:1.9
+3   ' express':<13 0.0361   0.0000   0.0011   N/A      ❌ REJECT   D:1.8/T:0.9
+4   '.':<13 0.4414   0.2539   0.5742   N/A      ❌ REJECT   D:1.5/T:2.0
+
+❌ REJECTION at position 0
+🔄 Correction: ' and' → ' associates'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 1.29, Target: 1.19
+
+================================================================================
+🔍 DIAGNOSTIC STEP 27 - Position 241
+================================================================================
+🧩 PREFIX (len=242 tokens)
+ned from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates associates
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1145s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' first':<13 0.2676   0.0000   0.0000   N/A      ❌ REJECT   D:2.4/T:1.9
+1   '.':<13 0.3066   0.2100   0.6836   N/A      ❌ REJECT   D:1.9/T:1.7
+2   ' 
+
+':<13 0.4961   0.5273   1.0000   N/A      ❌ REJECT   D:1.9/T:1.7
+3   'Let':<13 0.3184   0.1748   0.5508   N/A      ❌ REJECT   D:1.3/T:0.7
+4   ' me':<13 0.9844   0.9883   1.0000   N/A      ❌ REJECT   D:0.1/T:0.1
+
+❌ REJECTION at position 0
+🔄 Correction: ' first' → ' on'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 1.52, Target: 1.22
+
+================================================================================
+🔍 DIAGNOSTIC STEP 28 - Position 242
+================================================================================
+🧩 PREFIX (len=243 tokens)
+obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on on
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1142s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0244s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ',':<13 0.0192   0.0000   0.0008   N/A      ❌ REJECT   D:1.5/T:0.0
+1   ' but':<13 0.1553   0.3789   1.0000   N/A      ❌ REJECT   D:2.1/T:2.1
+2   ' actually':<13 0.0659   0.0130   0.1973   N/A      ❌ REJECT   D:2.2/T:2.0
+3   ',':<13 0.9141   0.9766   1.0000   N/A      ❌ REJECT   D:0.6/T:0.2
+4   ' parentheses':<13 0.0554   0.1807   1.0000   N/A      ❌ REJECT   D:3.0/T:2.7
+
+❌ REJECTION at position 0
+🔄 Correction: ',' → ' its'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 1.88, Target: 1.40
+
+================================================================================
+🔍 DIAGNOSTIC STEP 29 - Position 243
+================================================================================
+🧩 PREFIX (len=244 tokens)
+ned from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its its
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1137s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0244s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' own':<13 0.9492   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.3/T:0.0
+1   '.
+
+':<13 0.3164   0.4883   1.0000   N/A      ✅ ACCEPT   D:2.0/T:1.2
+2   'First':<13 0.5625   0.8633   1.0000   N/A      ✅ ACCEPT   D:1.3/T:0.6
+3   ',':<13 0.9375   0.8789   0.9375   N/A      ✅ ACCEPT   D:0.3/T:0.4
+4   ' let':<13 0.8164   0.8164   1.0000   N/A      ✅ ACCEPT   D:0.7/T:0.7
+
+🎉 ALL TOKENS ACCEPTED! Final token: ' me'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.89, Target: 0.57
+
+================================================================================
+🔍 DIAGNOSTIC STEP 30 - Position 249
+================================================================================
+🧩 PREFIX (len=250 tokens)
+sion $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me me
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1146s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0246s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' clarify':<13 0.0339   0.0072   0.2119   N/A      ❌ REJECT   D:2.3/T:2.1
+1   ' the':<13 0.5508   0.5977   1.0000   N/A      ❌ REJECT   D:1.0/T:1.2
+2   ' expression':<13 0.1045   0.0317   0.3047   N/A      ❌ REJECT   D:1.6/T:0.8
+3   ' as':<13 0.0349   0.0339   0.9727   N/A      ❌ REJECT   D:2.0/T:1.6
+4   ' written':<13 0.0459   0.0918   1.0000   N/A      ❌ REJECT   D:0.9/T:1.0
+
+❌ REJECTION at position 0
+🔄 Correction: ' clarify' → ' recall'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 1.58, Target: 1.35
+
+================================================================================
+🔍 DIAGNOSTIC STEP 31 - Position 250
+================================================================================
+🧩 PREFIX (len=251 tokens)
+t 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall recall
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1148s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' that':<13 0.6797   0.8438   1.0000   N/A      ✅ ACCEPT   D:1.0/T:0.6
+1   ' without':<13 0.4785   0.4805   1.0000   N/A      ✅ ACCEPT   D:1.7/T:1.4
+2   ' any':<13 0.9219   0.8828   0.9570   N/A      ✅ ACCEPT   D:0.3/T:0.4
+3   ' parentheses':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   ',':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+
+🎉 ALL TOKENS ACCEPTED! Final token: ' multiplication'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.60, Target: 0.47
+
+================================================================================
+🔍 DIAGNOSTIC STEP 32 - Position 256
+================================================================================
+🧩 PREFIX (len=257 tokens)
+te that rearranging terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication multiplication
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1142s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' is':<13 0.8750   0.8711   0.9961   N/A      ✅ ACCEPT   D:0.6/T:0.6
+1   ' done':<13 0.5820   0.0503   0.0864   N/A      ✅ ACCEPT   D:1.2/T:0.9
+2   ' before':<13 0.4785   0.6875   1.0000   N/A      ✅ ACCEPT   D:0.9/T:0.9
+3   ' addition':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   ',':<13 0.5273   0.6641   1.0000   N/A      ✅ ACCEPT   D:1.1/T:1.2
+
+🎉 ALL TOKENS ACCEPTED! Final token: ' so'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.75, Target: 0.69
+
+================================================================================
+🔍 DIAGNOSTIC STEP 33 - Position 262
+================================================================================
+🧩 PREFIX (len=263 tokens)
+ing terms is not allowed, only inserting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so so
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1140s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0244s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' the':<13 0.6211   0.5273   0.8477   N/A      ✅ ACCEPT   D:1.2/T:1.3
+1   ' expression':<13 0.8281   0.8164   0.9844   N/A      ✅ ACCEPT   D:0.8/T:0.7
+2   ' is':<13 0.6719   0.6836   1.0000   N/A      ✅ ACCEPT   D:1.2/T:1.2
+3   ' evaluated':<13 0.7344   0.9492   1.0000   N/A      ✅ ACCEPT   D:1.0/T:0.3
+4   ' as':<13 0.9688   0.9727   1.0000   N/A      ✅ ACCEPT   D:0.2/T:0.2
+
+🎉 ALL TOKENS ACCEPTED! Final token: ':
+
+'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.89, Target: 0.71
+
+================================================================================
+🔍 DIAGNOSTIC STEP 34 - Position 268
+================================================================================
+🧩 PREFIX (len=269 tokens)
+erting parentheses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+:
+
+
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1135s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0247s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   '1':<13 0.0042   0.0289   1.0000   N/A      ✅ ACCEPT   D:0.7/T:0.6
+1   '.':<13 0.9609   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.2/T:0.0
+2   ' \(':<13 0.2852   0.1367   0.4785   N/A      ✅ ACCEPT   D:1.4/T:1.3
+3   '2':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   ' \':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+
+🎉 ALL TOKENS ACCEPTED! Final token: 'cdot'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.46, Target: 0.39
+
+================================================================================
+🔍 DIAGNOSTIC STEP 35 - Position 274
+================================================================================
+🧩 PREFIX (len=275 tokens)
+heses).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdotcdot
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1142s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0247s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
 0   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 1   '3':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   ' =':<13 0.7422   0.5469   0.7383   N/A      ✅ ACCEPT   D:0.7/T:0.9
-3   ' ':<13 0.9961   0.9922   0.9961   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   ' =':<13 0.9883   0.9609   0.9727   N/A      ✅ ACCEPT   D:0.1/T:0.2
+3   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 4   '6':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 
 🎉 ALL TOKENS ACCEPTED! Final token: '\'
@@ -732,59 +1148,174 @@ Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies
    ✅ Accepted: 5
    📈 Acceptance rate: 100.0%
    ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.15, Target: 0.20
+   🧠 Avg entropies - Draft: 0.02, Target: 0.04
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 23 - Position 254
+🔍 DIAGNOSTIC STEP 36 - Position 280
 ================================================================================
-🧩 PREFIX (len=255 tokens)
- (3\cdot 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\\
+🧩 PREFIX (len=281 tokens)
+s).Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\\
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1173s
+   ⏱️  Draft generation: 0.1144s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0250s
+   ⏱️  Target verification: 0.0244s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   '),':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   ' then':<13 0.4336   0.3730   0.8594   N/A      ❌ REJECT   D:0.7/T:0.7
-2   ' \(':<13 0.9453   0.9844   1.0000   N/A      ❌ REJECT   D:0.2/T:0.1
-3   '6':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
-4   ' \':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
+0   '),
+':<13 0.0933   0.0179   0.1924   N/A      ❌ REJECT   D:0.8/T:0.1
+1   '2':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
+2   '.':<13 1.0000   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
+3   ' Then':<13 0.0737   0.2441   1.0000   N/A      ❌ REJECT   D:0.4/T:0.6
+4   ' \(':<13 0.8438   0.6172   0.7305   N/A      ❌ REJECT   D:0.6/T:0.7
 
-❌ REJECTION at position 1
-🔄 Correction: ' then' → ' \('
+❌ REJECTION at position 0
+🔄 Correction: '),
+' → ')
+'
 
 📊 SUMMARY:
    📝 Drafted: 5
-   ✅ Accepted: 1
-   📈 Acceptance rate: 20.0%
-   ⚡ Tokens used: 2
-   🧠 Avg entropies - Draft: 0.20, Target: 0.17
+   ✅ Accepted: 0
+   📈 Acceptance rate: 0.0%
+   ⚡ Tokens used: 1
+   🧠 Avg entropies - Draft: 0.37, Target: 0.28
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 24 - Position 256
+🔍 DIAGNOSTIC STEP 37 - Position 281
 ================================================================================
-🧩 PREFIX (len=257 tokens)
-t 4)) \cdot (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \( \(
+🧩 PREFIX (len=282 tokens)
+Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+)
+
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1170s
+   ⏱️  Draft generation: 0.1138s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0252s
+   ⏱️  Target verification: 0.0244s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   '6':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+0   '2':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+1   '.':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   ' \(':<13 0.9531   0.9453   0.9922   N/A      ✅ ACCEPT   D:0.2/T:0.2
+3   '6':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   ' \':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+
+🎉 ALL TOKENS ACCEPTED! Final token: 'cdot'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.04, Target: 0.04
+
+================================================================================
+🔍 DIAGNOSTIC STEP 38 - Position 287
+================================================================================
+🧩 PREFIX (len=288 tokens)
+need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdotcdot
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1135s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0242s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+1   '4':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   ' =':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+3   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   '2':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+
+🎉 ALL TOKENS ACCEPTED! Final token: '4'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.00, Target: 0.00
+
+================================================================================
+🔍 DIAGNOSTIC STEP 39 - Position 293
+================================================================================
+🧩 PREFIX (len=294 tokens)
+ to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 244
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1145s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0246s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   '\':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+1   ')
+':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   '3':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+3   '.':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   ' \(':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+
+🎉 ALL TOKENS ACCEPTED! Final token: '2'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.00, Target: 0.00
+
+================================================================================
+🔍 DIAGNOSTIC STEP 40 - Position 299
+================================================================================
+🧩 PREFIX (len=300 tokens)
+e out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 24\)
+3. \(22
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1139s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   '4':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 1   ' \':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 2   'cdot':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 3   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   '4':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   '5':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 
 🎉 ALL TOKENS ACCEPTED! Final token: ' ='
 
@@ -796,174 +1327,32 @@ Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies
    🧠 Avg entropies - Draft: 0.00, Target: 0.00
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 25 - Position 262
+🔍 DIAGNOSTIC STEP 41 - Position 305
 ================================================================================
-🧩 PREFIX (len=263 tokens)
-t (5+1) = 144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = =
+🧩 PREFIX (len=306 tokens)
+ny different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 24\)
+3. \(24 \cdot 5 = =
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1170s
+   ⏱️  Draft generation: 0.1139s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0252s
+   ⏱️  Target verification: 0.0244s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   ' ':<13 0.9961   0.9688   0.9727   N/A      ✅ ACCEPT   D:0.0/T:0.1
-1   '2':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   '4':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-3   '\':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   '),':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+0   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+1   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   '2':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+3   '0':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   '\':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 
-🎉 ALL TOKENS ACCEPTED! Final token: ' \('
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.01, Target: 0.03
-
-================================================================================
-🔍 DIAGNOSTIC STEP 26 - Position 268
-================================================================================
-🧩 PREFIX (len=269 tokens)
-144.
-\]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \( \(
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1181s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0252s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   '2':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   '4':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   ' \':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-3   'cdot':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   ' ':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-
-🎉 ALL TOKENS ACCEPTED! Final token: '5'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.00, Target: 0.00
-
-================================================================================
-🔍 DIAGNOSTIC STEP 27 - Position 274
-================================================================================
-🧩 PREFIX (len=275 tokens)
-n total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 55
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1176s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0254s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' =':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-3   '2':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   '0':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-
-🎉 ALL TOKENS ACCEPTED! Final token: '\'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.00, Target: 0.00
-
-================================================================================
-🔍 DIAGNOSTIC STEP 28 - Position 280
-================================================================================
-🧩 PREFIX (len=281 tokens)
-, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\\
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1174s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0252s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   '),':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   ' and':<13 0.5508   0.7305   1.0000   N/A      ✅ ACCEPT   D:1.2/T:0.7
-2   ' then':<13 0.8125   0.7695   0.9453   N/A      ✅ ACCEPT   D:0.5/T:0.6
-3   ' \(':<13 0.8281   0.5586   0.6758   N/A      ✅ ACCEPT   D:0.7/T:1.0
-4   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-
-🎉 ALL TOKENS ACCEPTED! Final token: '2'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.47, Target: 0.48
-
-================================================================================
-🔍 DIAGNOSTIC STEP 29 - Position 286
-================================================================================
-🧩 PREFIX (len=287 tokens)
-s can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(122
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1174s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   '0':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   ' +':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   ' ':<13 1.0000   0.9922   0.9922   N/A      ✅ ACCEPT   D:0.0/T:0.0
-3   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   ' =':<13 1.0000   0.9961   0.9961   N/A      ✅ ACCEPT   D:0.0/T:0.0
-
-🎉 ALL TOKENS ACCEPTED! Final token: ' '
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.00, Target: 0.01
-
-================================================================================
-🔍 DIAGNOSTIC STEP 30 - Position 292
-================================================================================
-🧩 PREFIX (len=293 tokens)
- obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 =  
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1183s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0254s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   '2':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-3   '\':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   ').':<13 0.5938   0.5000   0.8438   N/A      ✅ ACCEPT   D:0.7/T:0.7
-
-🎉 ALL TOKENS ACCEPTED! Final token: ' 
-
+🎉 ALL TOKENS ACCEPTED! Final token: ')
 '
 
 📊 SUMMARY:
@@ -971,125 +1360,109 @@ Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies
    ✅ Accepted: 5
    📈 Acceptance rate: 100.0%
    ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.14, Target: 0.14
+   🧠 Avg entropies - Draft: 0.00, Target: 0.00
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 31 - Position 298
-================================================================================
-🧩 PREFIX (len=299 tokens)
-rom the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
-
- 
-
-
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1177s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   'But':<13 0.8672   0.9883   1.0000   N/A      ✅ ACCEPT   D:0.5/T:0.1
-1   ' the':<13 0.6953   0.8906   1.0000   N/A      ✅ ACCEPT   D:1.3/T:0.6
-2   ' problem':<13 0.5117   0.7031   1.0000   N/A      ✅ ACCEPT   D:1.1/T:0.8
-3   ' says':<13 0.7148   0.9141   1.0000   N/A      ✅ ACCEPT   D:0.8/T:0.4
-4   ' that':<13 0.5547   0.7539   1.0000   N/A      ✅ ACCEPT   D:1.0/T:0.8
-
-🎉 ALL TOKENS ACCEPTED! Final token: ' if'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.96, Target: 0.54
-
-================================================================================
-🔍 DIAGNOSTIC STEP 32 - Position 304
-================================================================================
-🧩 PREFIX (len=305 tokens)
-\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
-
-But the problem says that if if
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1178s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0254s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' we':<13 0.3770   0.6211   1.0000   N/A      ✅ ACCEPT   D:0.7/T:0.7
-1   ' insert':<13 0.2422   0.6250   1.0000   N/A      ✅ ACCEPT   D:1.5/T:1.2
-2   ' parentheses':<13 1.0000   0.9805   0.9805   N/A      ✅ ACCEPT   D:0.0/T:0.1
-3   ',':<13 0.8984   0.7383   0.8203   N/A      ✅ ACCEPT   D:0.5/T:0.9
-4   ' we':<13 0.9727   0.9922   1.0000   N/A      ✅ ACCEPT   D:0.2/T:0.1
-
-🎉 ALL TOKENS ACCEPTED! Final token: ' can'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.57, Target: 0.60
-
-================================================================================
-🔍 DIAGNOSTIC STEP 33 - Position 310
-================================================================================
-🧩 PREFIX (len=311 tokens)
-ng parentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
-
-But the problem says that if we insert parentheses, we can can
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1177s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0251s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' change':<13 0.7930   0.0371   0.0469   N/A      ❌ REJECT   D:0.7/T:0.2
-1   ' the':<13 0.9922   0.9727   0.9805   N/A      ❌ REJECT   D:0.1/T:0.2
-2   ' order':<13 0.8828   0.9570   1.0000   N/A      ❌ REJECT   D:0.6/T:0.2
-3   ' and':<13 0.0007   0.0003   0.4004   N/A      ❌ REJECT   D:0.4/T:0.2
-4   ' get':<13 0.5664   0.8867   1.0000   N/A      ❌ REJECT   D:1.6/T:0.6
-
-❌ REJECTION at position 0
-🔄 Correction: ' change' → ' get'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 0
-   📈 Acceptance rate: 0.0%
-   ⚡ Tokens used: 1
-   🧠 Avg entropies - Draft: 0.68, Target: 0.29
-
-================================================================================
-🔍 DIAGNOSTIC STEP 34 - Position 311
+🔍 DIAGNOSTIC STEP 42 - Position 311
 ================================================================================
 🧩 PREFIX (len=312 tokens)
-arentheses? (Note that rearranging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
+erent values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
 
-But the problem says that if we insert parentheses, we can get get
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 24\)
+3. \(24 \cdot 5 = 120\)
+)
+
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1171s
+   ⏱️  Draft generation: 0.1138s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0252s
+   ⏱️  Target verification: 0.0245s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   ' different':<13 0.7695   0.4980   0.6484   N/A      ✅ ACCEPT   D:0.6/T:0.7
-1   ' values':<13 0.9531   0.9141   0.9609   N/A      ✅ ACCEPT   D:0.2/T:0.3
-2   '.':<13 0.9688   0.9258   0.9570   N/A      ✅ ACCEPT   D:0.2/T:0.3
-3   ' For':<13 0.7852   0.8516   1.0000   N/A      ✅ ACCEPT   D:0.8/T:0.7
-4   ' example':<13 0.9219   0.9258   1.0000   N/A      ✅ ACCEPT   D:0.3/T:0.3
+0   '4':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+1   '.':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   ' \(':<13 0.6367   0.7969   1.0000   N/A      ✅ ACCEPT   D:0.8/T:0.6
+3   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   '2':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+
+🎉 ALL TOKENS ACCEPTED! Final token: '0'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.15, Target: 0.13
+
+================================================================================
+🔍 DIAGNOSTIC STEP 43 - Position 317
+================================================================================
+🧩 PREFIX (len=318 tokens)
+alues I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 24\)
+3. \(24 \cdot 5 = 120\)
+4. \(1200
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1143s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0245s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' +':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+1   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+3   ' =':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+
+🎉 ALL TOKENS ACCEPTED! Final token: '1'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 5
+   📈 Acceptance rate: 100.0%
+   ⚡ Tokens used: 6
+   🧠 Avg entropies - Draft: 0.00, Target: 0.00
+
+================================================================================
+🔍 DIAGNOSTIC STEP 44 - Position 323
+================================================================================
+🧩 PREFIX (len=324 tokens)
+can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 24\)
+3. \(24 \cdot 5 = 120\)
+4. \(120 + 1 = 11
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1143s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0244s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   '2':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+1   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   '\':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+3   ')
+
+':<13 0.9922   0.9961   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   'So':<13 0.6836   0.7305   1.0000   N/A      ✅ ACCEPT   D:1.2/T:1.1
 
 🎉 ALL TOKENS ACCEPTED! Final token: ','
 
@@ -1098,225 +1471,200 @@ Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies
    ✅ Accepted: 5
    📈 Acceptance rate: 100.0%
    ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.42, Target: 0.45
+   🧠 Avg entropies - Draft: 0.24, Target: 0.22
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 35 - Position 317
-================================================================================
-🧩 PREFIX (len=318 tokens)
-anging terms is not allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
-
-But the problem says that if we insert parentheses, we can get different values. For example,,
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1174s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0252s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' if':<13 0.0605   0.0364   0.6016   N/A      ✅ ACCEPT   D:2.2/T:1.6
-1   ' we':<13 0.4883   0.6914   1.0000   N/A      ✅ ACCEPT   D:0.8/T:0.8
-2   ' write':<13 0.4961   0.2090   0.4219   N/A      ✅ ACCEPT   D:1.8/T:2.1
-3   ' \':<13 0.9023   0.9023   1.0000   N/A      ✅ ACCEPT   D:0.4/T:0.4
-4   '((':<13 1.0000   0.9883   0.9883   N/A      ✅ ACCEPT   D:0.0/T:0.1
-
-🎉 ALL TOKENS ACCEPTED! Final token: '2'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 1.04, Target: 0.98
-
-================================================================================
-🔍 DIAGNOSTIC STEP 36 - Position 323
-================================================================================
-🧩 PREFIX (len=324 tokens)
-ot allowed, only inserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
-
-But the problem says that if we insert parentheses, we can get different values. For example, if we write \((22
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1173s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0256s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' \':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   'cdot':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   ' (':<13 0.9883   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.0
-3   '3':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   ' \':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-
-🎉 ALL TOKENS ACCEPTED! Final token: 'cdot'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.01, Target: 0.00
-
-================================================================================
-🔍 DIAGNOSTIC STEP 37 - Position 329
+🔍 DIAGNOSTIC STEP 45 - Position 329
 ================================================================================
 🧩 PREFIX (len=330 tokens)
-nserting parentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
+y strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
 
-But the problem says that if we insert parentheses, we can get different values. For example, if we write \((2 \cdot (3 \cdotcdot
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 24\)
+3. \(24 \cdot 5 = 120\)
+4. \(120 + 1 = 121\)
+
+So,,
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1176s
+   ⏱️  Draft generation: 0.1136s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
+   ⏱️  Target verification: 0.0246s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   '4':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   '))':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-3   ' \':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   'cdot':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+0   ' that':<13 0.3145   0.2617   0.8320   N/A      ✅ ACCEPT   D:1.7/T:2.1
+1   ''s':<13 0.7383   0.7617   1.0000   N/A      ✅ ACCEPT   D:0.7/T:0.7
+2   ' the':<13 0.3926   0.4629   1.0000   N/A      ✅ ACCEPT   D:1.5/T:1.6
+3   ' default':<13 0.1973   0.3477   1.0000   N/A      ✅ ACCEPT   D:2.3/T:1.8
+4   ' value':<13 0.8125   0.6133   0.7539   N/A      ✅ ACCEPT   D:0.9/T:1.4
 
-🎉 ALL TOKENS ACCEPTED! Final token: ' ('
+🎉 ALL TOKENS ACCEPTED! Final token: ','
 
 📊 SUMMARY:
    📝 Drafted: 5
    ✅ Accepted: 5
    📈 Acceptance rate: 100.0%
    ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.00, Target: 0.00
+   🧠 Avg entropies - Draft: 1.44, Target: 1.50
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 38 - Position 335
+🔍 DIAGNOSTIC STEP 46 - Position 335
 ================================================================================
 🧩 PREFIX (len=336 tokens)
-arentheses).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
+parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
 
-But the problem says that if we insert parentheses, we can get different values. For example, if we write \((2 \cdot (3 \cdot 4)) \cdot ( (
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 24\)
+3. \(24 \cdot 5 = 120\)
+4. \(120 + 1 = 121\)
+
+So, that's the default value,,
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1180s
+   ⏱️  Draft generation: 0.1136s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
+   ⏱️  Target verification: 0.0244s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   '5':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-1   ' +':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-2   ' ':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+0   ' ':<13 0.7070   0.4258   0.6016   N/A      ✅ ACCEPT   D:0.8/T:0.8
+1   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+2   '2':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
 3   '1':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   ')\':<13 0.9961   0.9922   0.9961   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   ',':<13 0.0630   0.0266   0.4219   N/A      ❌ REJECT   D:0.9/T:0.8
 
-🎉 ALL TOKENS ACCEPTED! Final token: '),'
+❌ REJECTION at position 4
+🔄 Correction: ',' → '.'
 
 📊 SUMMARY:
    📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.01, Target: 0.01
+   ✅ Accepted: 4
+   📈 Acceptance rate: 80.0%
+   ⚡ Tokens used: 5
+   🧠 Avg entropies - Draft: 0.33, Target: 0.32
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 39 - Position 341
+🔍 DIAGNOSTIC STEP 47 - Position 340
 ================================================================================
-🧩 PREFIX (len=342 tokens)
-s).Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
+🧩 PREFIX (len=341 tokens)
+theses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
 
-But the problem says that if we insert parentheses, we can get different values. For example, if we write \((2 \cdot (3 \cdot 4)) \cdot (5 + 1)\),),
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 24\)
+3. \(24 \cdot 5 = 120\)
+4. \(120 + 1 = 121\)
+
+So, that's the default value, 121..
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1178s
+   ⏱️  Draft generation: 0.1141s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
+   ⏱️  Target verification: 0.0245s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   ' let':<13 0.0330   0.0013   0.0400   N/A      ❌ REJECT   D:1.1/T:0.9
-1   ''s':<13 0.7969   0.6797   0.8516   N/A      ❌ REJECT   D:0.5/T:0.6
-2   ' calculate':<13 0.1611   0.1650   1.0000   N/A      ❌ REJECT   D:1.1/T:1.2
-3   ' that':<13 0.9141   0.9766   1.0000   N/A      ❌ REJECT   D:0.4/T:0.1
-4   ':':<13 0.4766   0.4727   0.9922   N/A      ❌ REJECT   D:1.4/T:1.4
+0   ' But':<13 0.4121   0.5547   1.0000   N/A      ✅ ACCEPT   D:1.5/T:1.2
+1   ' inserting':<13 0.0121   0.0046   0.3770   N/A      ❌ REJECT   D:1.9/T:1.8
+2   ' parentheses':<13 0.9844   0.9336   0.9492   N/A      ❌ REJECT   D:0.1/T:0.2
+3   ' can':<13 0.9336   0.8086   0.8672   N/A      ❌ REJECT   D:0.4/T:0.8
+4   ' change':<13 0.7734   0.8164   1.0000   N/A      ❌ REJECT   D:1.1/T:0.9
 
-❌ REJECTION at position 0
-🔄 Correction: ' let' → ' that'
+❌ REJECTION at position 1
+🔄 Correction: ' inserting' → ' the'
 
 📊 SUMMARY:
    📝 Drafted: 5
-   ✅ Accepted: 0
-   📈 Acceptance rate: 0.0%
-   ⚡ Tokens used: 1
-   🧠 Avg entropies - Draft: 0.89, Target: 0.86
+   ✅ Accepted: 1
+   📈 Acceptance rate: 20.0%
+   ⚡ Tokens used: 2
+   🧠 Avg entropies - Draft: 0.98, Target: 0.98
 
 ================================================================================
-🔍 DIAGNOSTIC STEP 40 - Position 342
+🔍 DIAGNOSTIC STEP 48 - Position 342
 ================================================================================
 🧩 PREFIX (len=343 tokens)
- so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
+ the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
 
-But the problem says that if we insert parentheses, we can get different values. For example, if we write \((2 \cdot (3 \cdot 4)) \cdot (5 + 1)\), that that
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 24\)
+3. \(24 \cdot 5 = 120\)
+4. \(120 + 1 = 121\)
+
+So, that's the default value, 121. But the the
 --------------------------------------------------------------------------------
 📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1174s
+   ⏱️  Draft generation: 0.1141s
 🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0253s
+   ⏱️  Target verification: 0.0248s
 
 📊 TOKEN ANALYSIS:
 Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
 -------------------------------------------------------------------------------------
-0   ' equals':<13 0.4023   0.4355   1.0000   N/A      ✅ ACCEPT   D:2.0/T:1.8
-1   ' ':<13 0.1387   0.8867   1.0000   N/A      ✅ ACCEPT   D:1.1/T:0.4
-2   '1':<13 0.9844   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.0
-3   '4':<13 0.9922   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.0
-4   '4':<13 1.0000   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+0   ' problem':<13 0.5430   0.6719   1.0000   N/A      ✅ ACCEPT   D:0.9/T:0.7
+1   ' allows':<13 0.3457   0.0259   0.0747   N/A      ❌ REJECT   D:1.6/T:1.4
+2   ' inserting':<13 0.1367   0.2910   1.0000   N/A      ❌ REJECT   D:1.3/T:1.3
+3   ' parentheses':<13 0.9961   1.0000   1.0000   N/A      ❌ REJECT   D:0.0/T:0.0
+4   ' in':<13 0.1270   0.0830   0.6523   N/A      ❌ REJECT   D:1.1/T:1.1
 
-🎉 ALL TOKENS ACCEPTED! Final token: '.'
+❌ REJECTION at position 1
+🔄 Correction: ' allows' → ' says'
+
+📊 SUMMARY:
+   📝 Drafted: 5
+   ✅ Accepted: 1
+   📈 Acceptance rate: 20.0%
+   ⚡ Tokens used: 2
+   🧠 Avg entropies - Draft: 0.98, Target: 0.90
+
+================================================================================
+🔍 DIAGNOSTIC STEP 49 - Position 344
+================================================================================
+🧩 PREFIX (len=345 tokens)
+n \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 24\)
+3. \(24 \cdot 5 = 120\)
+4. \(120 + 1 = 121\)
+
+So, that's the default value, 121. But the problem says says
+--------------------------------------------------------------------------------
+📝 Draft model generating 5 tokens...
+   ⏱️  Draft generation: 0.1144s
+🎯 Target model verifying 5 tokens...
+   ⏱️  Target verification: 0.0244s
+
+📊 TOKEN ANALYSIS:
+Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
+-------------------------------------------------------------------------------------
+0   ' I':<13 0.1387   0.1523   1.0000   N/A      ✅ ACCEPT   D:1.3/T:1.4
+1   ' can':<13 0.9648   0.9961   1.0000   N/A      ✅ ACCEPT   D:0.2/T:0.0
+2   ' insert':<13 0.4727   0.2393   0.5078   N/A      ✅ ACCEPT   D:1.6/T:1.0
+3   ' parentheses':<13 0.9961   0.9961   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
+4   ' in':<13 0.2021   0.1904   0.9414   N/A      ✅ ACCEPT   D:1.0/T:0.8
+
+🎉 ALL TOKENS ACCEPTED! Final token: ' various'
 
 📊 SUMMARY:
    📝 Drafted: 5
    ✅ Accepted: 5
    📈 Acceptance rate: 100.0%
    ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.64, Target: 0.43
-
-================================================================================
-🔍 DIAGNOSTIC STEP 41 - Position 348
-================================================================================
-🧩 PREFIX (len=349 tokens)
-ve this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
-
-But the problem says that if we insert parentheses, we can get different values. For example, if we write \((2 \cdot (3 \cdot 4)) \cdot (5 + 1)\), that equals 144..
---------------------------------------------------------------------------------
-📝 Draft model generating 5 tokens...
-   ⏱️  Draft generation: 0.1178s
-🎯 Target model verifying 5 tokens...
-   ⏱️  Target verification: 0.0251s
-
-📊 TOKEN ANALYSIS:
-Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies      
--------------------------------------------------------------------------------------
-0   ' So':<13 0.7930   0.5742   0.7227   N/A      ✅ ACCEPT   D:1.0/T:1.5
-1   ' my':<13 0.0510   0.0461   0.9062   N/A      ✅ ACCEPT   D:1.7/T:2.1
-2   ' task':<13 0.7500   0.7266   0.9688   N/A      ✅ ACCEPT   D:0.8/T:0.9
-3   ' is':<13 0.9961   1.0000   1.0000   N/A      ✅ ACCEPT   D:0.0/T:0.0
-4   ' to':<13 0.9766   0.9961   1.0000   N/A      ✅ ACCEPT   D:0.1/T:0.0
-
-🎉 ALL TOKENS ACCEPTED! Final token: ' figure'
-
-📊 SUMMARY:
-   📝 Drafted: 5
-   ✅ Accepted: 5
-   📈 Acceptance rate: 100.0%
-   ⚡ Tokens used: 6
-   🧠 Avg entropies - Draft: 0.75, Target: 0.90
+   🧠 Avg entropies - Draft: 0.82, Target: 0.65
 
 ================================================================================
 📜 GENERATED TEXT:
@@ -1324,15 +1672,23 @@ Pos Token           Draft_P  Target_P Accept_P Random   Decision   Entropies
 The expression $2\cdot 3 \cdot 4\cdot 5+1$ is equal to 121, since multiplication is carried out before addition. However, we can obtain values other than 121 for this expression if we are allowed to change it by inserting parentheses. For example, we can obtain 144 by writing \[
 (2\cdot (3\cdot 4)) \cdot (5+1) = 144.
 \]In total, how many values can be obtained from the expression $2\cdot 3\cdot 4 \cdot 5 + 1$ by inserting parentheses? (Note that rearranging terms is not allowed, only inserting parentheses). 
-Okay, so I have this problem here: I need to figure out how many different values I can get from the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\) by inserting parentheses in different ways. I know that normally, without parentheses, multiplication is done before addition, so the expression is \(2 \times 3 \times 4 \times 5 + 1\), which equals 121, because \(2 \cdot 3 = 6\), \(6 \cdot 4 = 24\), \(24 \cdot 5 = 120\), and then \(120 + 1 = 121\). 
 
-But the problem says that if we insert parentheses, we can get different values. For example, if we write \((2 \cdot (3 \cdot 4)) \cdot (5 + 1)\), that equals 144. So
+Alright, so I need to figure out how many different values I can get by strategically inserting parentheses into the expression \(2 \cdot 3 \cdot 4 \cdot 5 + 1\). The key here is that I can only change the order of operations by adding parentheses, not rearranging the numbers or changing the operations themselves. Also, parentheses can't be nested in a way that would allow me to change the order beyond what multiplication associates on its own.
+
+First, let me recall that without any parentheses, multiplication is done before addition, so the expression is evaluated as:
+
+1. \(2 \cdot 3 = 6\)
+2. \(6 \cdot 4 = 24\)
+3. \(24 \cdot 5 = 120\)
+4. \(120 + 1 = 121\)
+
+So, that's the default value, 121. But the problem says I can insert parentheses in
 ================================================================================
 
 🏁 OVERALL STATISTICS:
-   🔢 Total steps: 42
-   📝 Total tokens drafted: 210
-   ✅ Total tokens accepted: 162
-   📊 Overall acceptance rate: 77.1%
-   ⚡ Average tokens per step: 3.86
+   🔢 Total steps: 50
+   📝 Total tokens drafted: 250
+   ✅ Total tokens accepted: 150
+   📊 Overall acceptance rate: 60.0%
+   ⚡ Average tokens per step: 3.00
 💾 Diagnostics saved to math_problem_diagnostics.json

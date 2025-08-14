@@ -6,6 +6,7 @@
 import itertools
 import sys
 import time
+import json
 from pathlib import Path
 from typing import Optional, Tuple, Union
 
@@ -125,22 +126,82 @@ def model_forward(model, x, input_pos):
     return model(x, input_pos)
 
 
-def verify_tokens(p: torch.Tensor, q: torch.Tensor, target_probs: torch.Tensor) -> torch.Tensor:
+def verify_tokens(p: torch.Tensor, q: torch.Tensor, target_probs: torch.Tensor, draft_probs: torch.Tensor, draft_tokens: torch.Tensor = None, tokenizer = None, jsonl_file: str = "rejected_tokens.jsonl") -> torch.Tensor:
     """
     p: [B, L] draft probabilities
     q: [B, L] target probabilities
     target_probs: [B, L, vocab_size] full softmax distribution of the target model
+    draft_probs: [B, L, vocab_size] full softmax distribution of the draft model
+    draft_tokens: [L, 1] draft tokens for debugging
+    tokenizer: tokenizer for decoding tokens
+    jsonl_file: path to save rejected token data
 
     Returns indices [B_idx, L_idx] of tokens to reject (i.e., not meeting accept criteria).
     """
     # Calculate entropy across vocab dimension (dim=-1), shape: [B, L]
-    entropy = -torch.sum(target_probs * torch.log(target_probs + 1e-10), dim=-1)
+    target_entropy = -torch.sum(target_probs * torch.log(target_probs + 1e-10), dim=-1)
+    draft_entropy = -torch.sum(draft_probs * torch.log(draft_probs + 1e-10), dim=-1)
 
-    # Conditions: accept if q > 0.2 and entropy < 0.75
-    accept_mask = (q > 0.2)
+    # Conditions: accept if q > 0.1
+    accept_mask = ((q > 0.07) & (target_entropy < 0.72)) | ((q > 0.14) & (target_entropy >= 0.72))
     # Invert: reject if not accepted
     reject_mask = ~accept_mask
     rejected_locations = reject_mask.nonzero(as_tuple=False)
+    
+    # Save rejected token data to JSONL
+    if len(rejected_locations) > 0:
+        rejected_data = []
+        
+        for i, (batch_idx, seq_idx) in enumerate(rejected_locations):
+            batch_idx, seq_idx = batch_idx.item(), seq_idx.item()
+            
+            # Prepare data for this rejected token
+            token_data = {
+                "batch_idx": batch_idx,
+                "sequence_idx": seq_idx,
+                "p_draft_prob": p[batch_idx, seq_idx].item() if seq_idx < p.shape[1] else None,
+                "q_target_prob": q[batch_idx, seq_idx].item() if seq_idx < q.shape[1] else None,
+                "draft_entropy": draft_entropy[batch_idx, seq_idx].item() if seq_idx < draft_entropy.shape[1] else None,
+                "target_entropy": target_entropy[batch_idx, seq_idx].item() if seq_idx < target_entropy.shape[1] else None,
+            }
+            
+            # Add token information if available
+            if draft_tokens is not None and seq_idx < len(draft_tokens):
+                token_id = draft_tokens[seq_idx].item()
+                token_data["token_id"] = token_id
+                
+                if tokenizer is not None:
+                    decoded_token = tokenizer.decode([token_id])
+                    token_data["decoded_token"] = decoded_token
+                    
+                    # Get surrounding context (±5 tokens)
+                    context_start = max(0, seq_idx - 5)
+                    context_end = min(len(draft_tokens), seq_idx + 5)
+                    context_tokens = draft_tokens[context_start:context_end].flatten().tolist()
+                    context_decoded = tokenizer.decode(context_tokens)
+                    token_data["context"] = context_decoded
+            
+            rejected_data.append(token_data)
+        """
+        # Write to JSONL file
+        with open(jsonl_file, 'a', encoding='utf-8') as f:
+            for data in rejected_data:
+                f.write(json.dumps(data) + '\n')
+        
+        # Debug: print rejected locations with token information
+        print(f"\n=== REJECTED LOCATIONS ({len(rejected_locations)}) ===")
+        for data in rejected_data:
+            print(f"  Batch {data['batch_idx']}, Pos {data['sequence_idx']}:")
+            if 'token_id' in data:
+                print(f"     Token ID: {data['token_id']}")
+            if 'decoded_token' in data:
+                print(f"     Decoded: '{data['decoded_token']}'")
+            if 'context' in data:
+                print(f"     Context: '{data['context']}'")
+            print(f"     p (draft): {data['p_draft_prob']:.4f}, q (target): {data['q_target_prob']:.4f}")
+            print(f"     draft_entropy: {data['draft_entropy']:.4f}, target_entropy: {data['target_entropy']:.4f}")
+        """
+    
     return rejected_locations
 
 def compare_kv_caches(model1, model2, layer_idx=0, tolerance=1e-6):
@@ -202,6 +263,8 @@ def speculative_decode(
     input_pos: int,
     speculate_k: int,
     eos_id: int,
+    tokenizer = None,
+    jsonl_file: str = "rejected_tokens.jsonl",
     **sampling_kwargs
 ) -> torch.Tensor:
     # draft model inference sequentially
@@ -215,22 +278,34 @@ def speculative_decode(
         torch.cat([cur_token.view(1, 1), draft_tokens], dim=0).view(1, -1),
         torch.arange(input_pos, input_pos + speculate_k + 1, device=cur_token.device)
     )
-    target_probs = logits_to_probs(target_logits,  **sampling_kwargs)
-    draft_probs = torch.cat(draft_probs, dim=0).unsqueeze(0) #[B, L, 1]
+    target_probs = logits_to_probs(target_logits)
+    draft_probs_tensor = torch.cat(draft_probs, dim=0).unsqueeze(0) #[B, L, vocab_size]
     
     # q: target prob, p: draft prob
     # q >= p: always accept draft token
     # q < p: q/p prob to accept draft token
 
-
-    p = draft_probs[:, torch.arange(0, speculate_k, device=device), draft_tokens.view(-1)] # [B, L, 1]
-    q = target_probs[:, torch.arange(0, speculate_k, device=device), draft_tokens.view(-1)] # [B, L, 1]
+    p = draft_probs_tensor[:, torch.arange(0, speculate_k, device=device), draft_tokens.view(-1)] # [B, L]
+    q = target_probs[:, torch.arange(0, speculate_k, device=device), draft_tokens.view(-1)] # [B, L]
     
-    rejected_locations = verify_tokens(p, q, target_probs[:, :speculate_k])
+    # Pass both draft and target full probability distributions to verify_tokens
+    rejected_locations = verify_tokens(
+        p, q, 
+        target_probs[:, :speculate_k], 
+        draft_probs_tensor[:, :speculate_k], 
+        draft_tokens, 
+        tokenizer, 
+        jsonl_file
+    )
+
+    entropy = -torch.sum(draft_probs_tensor * torch.log(draft_probs_tensor + 1e-10), dim=-1)
+    entropy_target = -torch.sum(target_probs * torch.log(target_probs + 1e-10), dim=-1)
 
     """
     print("p", p)
     print("q", q)
+    print("entropy", entropy)
+    print("entropy_target", entropy_target)
     print("rejected_locations", rejected_locations)
     """
     #accept_draft_prob = torch.minimum(torch.ones(()), q[:speculate_k]/ p)
@@ -291,6 +366,8 @@ def generate(
     eos_id: int,
     speculate_k: Optional[int] = 8,
     callback = lambda x: x,
+    tokenizer = None,
+    jsonl_file: str = "rejected_tokens.jsonl",
     **sampling_kwargs
 ) -> torch.Tensor:
     """
@@ -336,7 +413,7 @@ def generate(
         while input_pos < T_new - 1:
             cur_token = next_token.view(())
             next_tokens = speculative_decode(
-                model, draft_model, cur_token, input_pos, speculate_k, eos_id, **sampling_kwargs
+                model, draft_model, cur_token, input_pos, speculate_k, eos_id, tokenizer, jsonl_file, **sampling_kwargs
             )
             accept_counts[len(next_tokens) - 1] += 1
             num_added = min(T_new - input_pos - 1, len(next_tokens))
@@ -439,6 +516,7 @@ def main(
     draft_checkpoint_path: Optional[Path] = None,
     speculate_k: int = 5,
     device=default_device,
+    jsonl_file: str = "rejected_tokens.jsonl",
 ) -> None:
     """Generates text samples based on a pre-trained Transformer model and tokenizer.
     """
@@ -517,6 +595,9 @@ def main(
         if compile_prefill:
             prefill = torch.compile(prefill, fullgraph=True, dynamic=True)
 
+    # Clear the JSONL file at the start of generation
+    with open(jsonl_file, 'w') as f:
+        pass  # Just clear the file
 
     aggregate_metrics = {
         'tokens_per_sec': [],
@@ -567,6 +648,8 @@ def main(
                 interactive=interactive,
                 callback=callback,
                 eos_id=eos,
+                tokenizer=tokenizer,
+                jsonl_file=jsonl_file,
                 temperature=temperature,
                 top_k=top_k,
                 top_p=top_p,
@@ -613,6 +696,7 @@ def main(
     print(f"Generated tokens: {aggregate_metrics['generated_tokens']}")
     print(f"Average tokens/sec: {torch.mean(torch.tensor(aggregate_metrics['tokens_per_sec'])).item():.2f}")
     print(f"Memory used: {torch.cuda.max_memory_reserved() / 1e9:.02f} GB")
+    print(f"Rejected tokens data saved to: {jsonl_file}")
 
 
 if __name__ == '__main__':
@@ -640,10 +724,11 @@ if __name__ == '__main__':
     parser.add_argument('--speculate_k', type=int, default=5, help='Speculative execution depth.')
     parser.add_argument('--draft_checkpoint_path', type=Path, default=None, help='Draft checkpoint path.')
     parser.add_argument('--device', type=str, default=default_device, help='Device to use')
+    parser.add_argument('--jsonl_file', type=str, default='rejected_tokens.jsonl', help='Path to save rejected token data')
 
     args = parser.parse_args()
     main(
         args.prompt, args.interactive, args.num_samples, args.max_new_tokens, args.batch_size, args.top_k, args.top_p,
         args.temperature, args.checkpoint_path, args.compile, args.compile_prefill, args.profile, args.draft_checkpoint_path,
-        args.speculate_k, args.device
+        args.speculate_k, args.device, args.jsonl_file
     )
